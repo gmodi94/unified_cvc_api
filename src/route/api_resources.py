@@ -1,9 +1,13 @@
 from main import app
 from flask import request,jsonify
-from utils.redis_operation import add_transcations
+# from utils.redis_operation import add_transcations
 from utils.message_sender import send_message
 from config import MESSAGE_PAYLOAD
 from utils.decorators import middleware
+
+
+
+
 
 @app.route("/v1/scan",methods=["post"])
 @middleware
@@ -23,6 +27,16 @@ async def scan(from_id):
     return jsonify({"status":True})
     
 
+@app.route("/v1/callback",methods=["post"])
+async def callback():
+    try:
+        callback_payload = request.get_json()
+        print("callback_payload",callback_payload)
+        return "callback"
+
+    except Exception as e:
+        traceback.print_exc()
+    return {"status": "ok"}
 
 # if "__main__" == __name__:
 #     app.run()
