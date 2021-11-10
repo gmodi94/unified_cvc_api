@@ -14,6 +14,34 @@ redis_con = redis.Redis(host="localhost",
                         decode_responses=True)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 
+async def fetch_details(user_contact,transaction_id):
+	try:
+		#fetch transaction and user records using redis
+		transaction_records =redis_con.hget("Transactions_details:"+str(transaction_id))
+		# print(transaction_records)
+		if transaction_records is not None:
+			from_id = transaction_records.from
+			to_id = transaction_records.to
+			print("from_id",from_id,"to_id",to_id)
+		else:
+			raise Exception("transaction_records not found")
+
+		#fetch registration details based on redis key user_details & mob_no
+		registration_records = redis_con.hget("user_details:",user_contact)
+		if registration_records is not None:
+			f_name=registration_records.first_name
+			l_name=registration_records.last_name
+			phn_num=registration_records.mobile_number
+			address=registration_records.address
+			return(from_id,to_id,f_name,l_name,phn_num,address)
+		else:
+			raise Exception("registration_records not found")
+	except Exception:
+		traceback.print_exc()
+		raise Exception("{eror}")
+
+
+
 async def check_user_details(user):
 	try:
 		user_details = redis_con.hget("USER_DETAILS",user)
