@@ -39,6 +39,7 @@ async def add_transcations(to_id,from_id):
 	t_id = t1.id
 	print(t_id)
 	redis_con.hmset("Transactions_details:"+str(t_id),{"from":from_id,"to":to_id})
+	redis_con.expire("Transactions_details:"+str(t_id), 3600)
 	return t_id
 
 
