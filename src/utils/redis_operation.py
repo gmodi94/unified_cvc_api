@@ -1,7 +1,9 @@
 from main import app
+from models import db
 import json
 import traceback
 import redis
+from models.Transcationmodel import transcation_details
 
 redis_con = redis.Redis(host="localhost",
                         port=6379,
@@ -27,7 +29,10 @@ async def check_user_details(user):
 	return False, user_details
 
 
-# async def add_transcations(to_id,from_id):
-# 	try:
-
-# 		redis_con.hmset("Transactions_details:"+t_id,"from",from_id,"to",to_id)
+async def add_transcations(to_id,from_id):
+	db.create_all()
+	t1 = transcation_details(from_id=from_id,to_id=to_id,status="pending")
+	db.session.add(t1)
+	db.session.commit()
+	t_id = transcation_details.id 
+	redis_con.hmset("Transactions_details:"+t_id,"from",from_id,"to",to_id)
