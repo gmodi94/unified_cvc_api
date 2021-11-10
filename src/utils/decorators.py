@@ -16,10 +16,10 @@ def middleware(func):
             token_details = jwt.decode(
                 auth_token, 'secret', algorithms=['HS256'])
             # print(token_details)
-            user_id= token_details["user_id"]
-            await check_user_details(user_id)
+            from_id= token_details["user_id"]
+            # await check_user_details(user_id)
             # return "hello"
-            return await func(user_id)
+            return await func(from_id)
         except json.decoder.JSONDecodeError:
             traceback.print_exc()
             return "error"  
