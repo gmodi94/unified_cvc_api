@@ -122,9 +122,9 @@ async def callback():
             full_name = user_details1.first_name +" "+ user_details1.last_name
             rcspayload['phone_no'] = user_details2.mobile_number
             rcspayload['card']['title'] = "Bussiness Card of "+full_name
-            rcspayload['card']['suggestions'][0]['text'] = "Whatsapp "+full_name
-            rcspayload['card']['suggestions'][1]['text'] = "Mail "+full_name
-            rcspayload['card']['suggestions'][2]['text'] = "Call "+full_name
+            rcspayload['card']['suggestions'][0]['text'] = "Whatsapp "+user_details2.first_name
+            rcspayload['card']['suggestions'][1]['text'] = "Mail "+user_details2.first_name
+            rcspayload['card']['suggestions'][2]['text'] = "Call "+user_details2.first_name
             rcspayload['card']['suggestions'][0]['url'] = "http://wa.me/"+user_details1.mobile_number
             rcspayload['card']['suggestions'][1]['url'] = "https://conviscard.herokuapp.com/mail?mail="+user_details1.email
             rcspayload['card']['suggestions'][2]['call_to'] = user_details1.mobile_number
@@ -134,9 +134,9 @@ async def callback():
             full_name = user_details2.first_name +" "+ user_details2.last_name
             rcspayload['phone_no'] = user_details1.mobile_number
             rcspayload['card']['title'] = "Bussiness Card of "+full_name
-            rcspayload['card']['suggestions'][0]['text'] = "Whatsapp "+full_name
-            rcspayload['card']['suggestions'][1]['text'] = "Mail "+full_name
-            rcspayload['card']['suggestions'][2]['text'] = "Call "+full_name
+            rcspayload['card']['suggestions'][0]['text'] = "Whatsapp "+user_details2.first_name
+            rcspayload['card']['suggestions'][1]['text'] = "Mail "+user_details2.first_name
+            rcspayload['card']['suggestions'][2]['text'] = "Call "+user_details2.first_name
             rcspayload['card']['suggestions'][0]['url'] = "http://wa.me/"+user_details2.mobile_number
             rcspayload['card']['suggestions'][1]['url'] = "https://conviscard.herokuapp.com/mail?mail="+user_details2.email
             rcspayload['card']['suggestions'][2]['call_to'] = user_details2.mobile_number
