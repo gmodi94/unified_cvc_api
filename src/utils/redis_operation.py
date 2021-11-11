@@ -81,7 +81,10 @@ async def add_user(data):
 	encoded_jwt = jwt.encode({"user_id": str(user_id.id)}, "secret", algorithm="HS256")
 	insert_data["jwt_tokens"] = encoded_jwt
 	user_id.jwt_tokens = encoded_jwt
-	redis_con.hmset("user_details:"+str(user_id.mobile_number),insert_data)
+	try:
+		redis_con.hmset("user_details:"+str(user_id.mobile_number),insert_data)
+	except:
+		pass
 	db.session.add(user_id)
 	db.session.commit()
 	blob_data =	qr(str(user_id.id),data["first_name"],data["last_name"])
