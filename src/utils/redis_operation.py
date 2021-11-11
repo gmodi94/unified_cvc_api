@@ -9,10 +9,13 @@ from src.models.Transcationmodel import transcation_details
 from src.models.userdetails import UserDetails
 import jwt
 
-redis_con = redis.Redis(host="localhost",
-                        port=6379,
-                        db=5,
-                        decode_responses=True)
+try:
+	redis_con = redis.Redis(host="localhost",
+							port=6379,
+							db=5,
+							decode_responses=True)
+except:
+	redis_con = redis.Redis()
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 
 async def fetch_details(transaction_id):
