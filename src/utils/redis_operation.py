@@ -70,7 +70,7 @@ async def add_transcations(to_id,from_id):
 async def add_user(data):
 	db.create_all()
 	u = UserDetails.query.filter_by(mobile_number=data["mobile_number"]).first()
-	if u is None:
+	if u:
 		return False
 	insert_data = {
             "first_name" : data["first_name"],
