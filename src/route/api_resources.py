@@ -2,7 +2,7 @@ from src.main import app
 from flask import request,jsonify,redirect
 from src.utils.redis_operation import add_otp, add_transcations, add_user,delete_otp,get_token, get_user_details,validate_otp,fetch_details
 from src.utils.message_sender import capability, send_message
-from src.config import MESSAGE_PAYLOAD,RICH_TEXT_PAYLOAD,FALLBACK_PAYLOAD
+from src.config import MESSAGE_PAYLOAD, RCS_PAYLOAD,RICH_TEXT_PAYLOAD,FALLBACK_PAYLOAD
 from src.utils.decorators import middleware
 from src.models import db
 from datetime import timedelta,datetime
@@ -105,7 +105,6 @@ async def callback():
         users = [user_details1,user_details2]
             
         if answer == "Yes":
-
             final_payload = RICH_TEXT_PAYLOAD 
             full_name = user_details2.first_name +" "+ user_details2.last_name
             final_payload["phone"] = user_details1.mobile_number
@@ -118,6 +117,32 @@ async def callback():
             final_payload["media"]["caption"] = "Contact Details Received From {}: \n \n *Name:* {} \n \n *Mobile Number:* {} \n \n *Email:* {}  \n \n *Address:* {}  \n \n *Notes:* {}".format(user_details1.first_name,full_name,user_details1.mobile_number,user_details1.email,user_details1.address,user_details1.extra_notes)
             print(final_payload)
             send_message(final_payload,"wbm")
+
+            rcspayload = RCS_PAYLOAD
+            full_name = user_details1.first_name +" "+ user_details1.last_name
+            rcspayload['phone_no'] = user_details2.mobile_number
+            rcspayload['card']['title'] = "Bussiness Card of "+full_name
+            rcspayload['card']['suggestions'][0]['text'] = "Whatsapp "+full_name
+            rcspayload['card']['suggestions'][1]['text'] = "Mail "+full_name
+            rcspayload['card']['suggestions'][2]['text'] = "Call "+full_name
+            rcspayload['card']['suggestions'][0]['url'] = "http://wa.me/"+user_details1.mobile_number
+            rcspayload['card']['suggestions'][1]['url'] = "https://conviscard.herokuapp.com/mail?mail="+user_details1.email
+            rcspayload['card']['suggestions'][2]['call_to'] = user_details1.mobile_number
+
+            send_message(rcspayload,"rcs")
+
+            full_name = user_details2.first_name +" "+ user_details2.last_name
+            rcspayload['phone_no'] = user_details1.mobile_number
+            rcspayload['card']['title'] = "Bussiness Card of "+full_name
+            rcspayload['card']['suggestions'][0]['text'] = "Whatsapp "+full_name
+            rcspayload['card']['suggestions'][1]['text'] = "Mail "+full_name
+            rcspayload['card']['suggestions'][2]['text'] = "Call "+full_name
+            rcspayload['card']['suggestions'][0]['url'] = "http://wa.me/"+user_details2.mobile_number
+            rcspayload['card']['suggestions'][1]['url'] = "https://conviscard.herokuapp.com/mail?mail="+user_details2.email
+            rcspayload['card']['suggestions'][2]['call_to'] = user_details2.mobile_number
+
+            send_message(rcspayload,"rcs")
+
 
         elif answer == "No":
             final_payload = FALLBACK_PAYLOAD

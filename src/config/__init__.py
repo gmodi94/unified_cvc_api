@@ -31,27 +31,27 @@ FALLBACK_PAYLOAD = {
 
 RCS_PAYLOAD = {
 	"type": "card",
-	"phone_no": "+919082366048",
+	"phone_no": "",
 	"bot_name": "Routemobile",
 	"card": {
-		"title": "Bussiness Card",
-		"description": "The description for card #2",
-		"url": "https://storage.googleapis.com/kitchen-sink-sample-images/cute-dog.jpg",
+		"title": "",
+		"description": "You can contact via",
+		"url": "https://image.freepik.com/free-photo/business-card-stack-mockup_23-2147687412.jpg",
 		"suggestions": [{
 			"type":"url",
-			"text":"Tap me",
-			"url":"http://wa.me/+919082366048",
+			"text":"",
+			"url":"",
 			"postback":"url"
 		},
         {
 			"type":"url",
-			"text":"Tap me",
-			"url":"https://conviscard.herokuapp.com/mail?mail=waghela.rutvej1@gmail.com",
+			"text":"",
+			"url":"",
 			"postback":"url"
 		},
             {	"type":"dial",
-			"text":"Call us",
-			"call_to":"+919082366048",
+			"text":"",
+			"call_to":"",
 			"postback":"Call us"
 		}
 		]
