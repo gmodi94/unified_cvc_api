@@ -125,12 +125,13 @@ async def delete_otp(mobile_number):
 
 
 async def get_token(mobile_number):
+	u = UserDetails.query.filter_by(mobile_number=mobile_number).first()
 	try:
 		token = redis_con.hget("user_details:"+str(mobile_number),"jwt_tokens")
 	except:
-		u = UserDetails.query.filter_by(mobile_number=mobile_number).first()
 		token = u.jwt_tokens
-	return token
+	blob = u.blob_file
+	return token,blob
 
 async def get_user_details(id):
 	user = UserDetails.query.filter_by(id=id).first()

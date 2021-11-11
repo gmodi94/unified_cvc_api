@@ -47,10 +47,10 @@ async def validate():
             if str(data["otp"]) == d["otp"]:
                 await delete_otp(mobile_number)
                 if d["action"]=="sign_up":
-                    return {"status":"success"}
+                    return {"status":"success",}
                 elif d['action'] == "log_in":
-                    token = await get_token(mobile_number)
-                    return {"status":"success","token":token}
+                    blob ,token = await get_token(mobile_number)
+                    return {"status":"success","token":token,"qrimage":blob}
             else:
                 return {"status":"invalid"}
         else:
@@ -90,27 +90,43 @@ async def callback():
     try:
         callback_payload = request.get_json()
         # print("callback_payload",callback_payload)
-        user_contact = callback_payload['user_contact']
+        # user_contact = callback_payload['user_contact']
 
         #If yes to connect
         answer = callback_payload['messages'][0]['interactive']['button_reply']['title']
         transaction_id = callback_payload['messages'][0]['interactive']['button_reply']['id'].split(":")[1]
         users = await fetch_details(transaction_id)
-        for user in users:
-            print(user)
-            user_details = await get_user_details(user)
-            if answer == "Yes":
-                final_payload = RICH_TEXT_PAYLOAD 
-                full_name = user_details.first_name + user_details.last_name
-                final_payload["phone"] = user_details.mobile_number
-                final_payload["media"]["caption"] = final_payload["media"]["caption"].format(user_details.first_name,full_name,user_details.mobile_number,user_details.address,user_details.extra_notes)
-                print(final_payload)
-            else:
-                final_payload = FALLBACK_PAYLOAD
-                final_payload["phone"] = user_details.mobile_number
-                final_payload["text"] = "Successfully Rejected" if user == users[1] else "Your request has deined by the user"
+        user_details1 = await get_user_details(users[0])
+        user_details2 = await get_user_details(users[1])
+        users = [user_details1,user_details2]
+            
+        if answer == "Yes":
 
+            final_payload = RICH_TEXT_PAYLOAD 
+            full_name = user_details2.first_name + user_details2.last_name
+            final_payload["phone"] = user_details1.mobile_number
+            final_payload["media"]["caption"] = final_payload["media"]["caption"].format(user_details2.first_name,full_name,user_details2.mobile_number,user_details2.address,user_details2.extra_notes)
+            print(final_payload)
             send_message(final_payload,"wbm")
+            final_payload = RICH_TEXT_PAYLOAD 
+            full_name = user_details1.first_name + user_details1.last_name
+            final_payload["phone"] = user_details2.mobile_number
+            final_payload["media"]["caption"] = final_payload["media"]["caption"].format(user_details1.first_name,full_name,user_details1.mobile_number,user_details1.address,user_details1.extra_notes)
+            print(final_payload)
+            send_message(final_payload,"wbm")
+
+        elif answer == "No":
+            final_payload = FALLBACK_PAYLOAD
+            final_payload["phone"] = user_details1.mobile_number
+            final_payload["text"] = "Your request has deined by the {}".format(user_details2.first_name)
+            send_message(final_payload,"wbm")
+            final_payload = FALLBACK_PAYLOAD
+            final_payload["phone"] = user_details1.mobile_number
+            final_payload["text"] = "Rejection Successfull"
+            send_message(final_payload,"wbm")
+
+
+
         #fetch the registeration details based on the transaction details ka id and return the final payload to be sent
         #from_id to_id ka two payloads banana hain matlab?? need to ask gaurav
         # from_id,to_id,f_name,l_name,phn_num,address = fetch_details(user_contact,transaction_id)
