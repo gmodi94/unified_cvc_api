@@ -154,8 +154,8 @@ async def registration():
         # data= ValidateData().load(data)
         if not await add_user(data):
             return {"status": "User Exist"}
-
-        payload = "Registartion is successfull \n Please click on this link and send the Hi message \n https://wa.me/+918928894215?text=Hi"
+        await add_user(data)
+        payload = "Registration is successfull \n Please click on this link and send the Hi message \n https://wa.me/+918928894215?text=Hi"
         send_message(payload,"sms",data["mobile_number"])
         return {"status":"success"}
     except Exception as e:
