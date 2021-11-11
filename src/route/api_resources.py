@@ -105,20 +105,20 @@ async def callback():
             final_payload = RICH_TEXT_PAYLOAD 
             full_name = user_details2.first_name +" "+ user_details2.last_name
             final_payload["phone"] = user_details1.mobile_number
-            final_payload["media"]["caption"] = "Contact Details Received From {}: \n *Name:* {} \n *Mobile Number:* {} \n * Email:* {}  \n *Address:* {}  \n * Notes:* {}".format(user_details2.first_name,full_name,user_details2.mobile_number,user_details2.email,user_details2.address,user_details2.extra_notes)
+            final_payload["media"]["caption"] = "Contact Details Received From {}: \n *Name:* {} \n *Mobile Number:* {} \n *Email:* {}  \n *Address:* {}  \n *Notes:* {}".format(user_details2.first_name,full_name,user_details2.mobile_number,user_details2.email,user_details2.address,user_details2.extra_notes)
             print(final_payload)
             send_message(final_payload,"wbm")
             # final_payload = RICH_TEXT_PAYLOAD 
             full_name = user_details1.first_name + user_details1.last_name
             final_payload["phone"] = user_details2.mobile_number
-            final_payload["media"]["caption"] = "Contact Details Received From {}: \n *Name:* {} \n *Mobile Number:* {} \n * Email:* {}  \n *Address:* {}  \n * Notes:* {}".format(user_details1.first_name,full_name,user_details1.mobile_number,user_details1.email,user_details1.address,user_details1.extra_notes)
+            final_payload["media"]["caption"] = "Contact Details Received From {}: \n *Name:* {} \n *Mobile Number:* {} \n *Email:* {}  \n *Address:* {}  \n *Notes:* {}".format(user_details1.first_name,full_name,user_details1.mobile_number,user_details1.email,user_details1.address,user_details1.extra_notes)
             print(final_payload)
             send_message(final_payload,"wbm")
 
         elif answer == "No":
             final_payload = FALLBACK_PAYLOAD
             final_payload["phone"] = user_details1.mobile_number
-            final_payload["text"] = "Your request has deined by the {}".format(user_details2.first_name)
+            final_payload["text"] = "Your request has deined by {}".format(user_details2.first_name)
             send_message(final_payload,"wbm")
             final_payload["phone"] = user_details2.mobile_number
             final_payload["text"] = "Rejection Successfull"
