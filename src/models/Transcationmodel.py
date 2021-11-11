@@ -1,4 +1,4 @@
-from models import db
+from src.models import db
 
 class transcation_details(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -1,10 +1,10 @@
-from main import app
+from src.main import app
 from flask import request,jsonify
-from utils.redis_operation import add_otp, add_transcations, add_user,delete_otp,get_token, get_user_details,validate_otp,fetch_details
-from utils.message_sender import send_message
-from config import MESSAGE_PAYLOAD,RICH_TEXT_PAYLOAD,FALLBACK_PAYLOAD
-from utils.decorators import middleware
-from models import db
+from src.utils.redis_operation import add_otp, add_transcations, add_user,delete_otp,get_token, get_user_details,validate_otp,fetch_details
+from src.utils.message_sender import send_message
+from src.config import MESSAGE_PAYLOAD,RICH_TEXT_PAYLOAD,FALLBACK_PAYLOAD
+from src.utils.decorators import middleware
+from src.models import db
 from datetime import timedelta,datetime
 
 # from models.userdetails import UserDetails

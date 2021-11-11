@@ -1,12 +1,12 @@
-from models.otpdetails import otp_details
-from utils.helper import qr
-from main import app
-from models import db
+from src.models.otpdetails import otp_details
+from src.utils.helper import qr
+from src.main import app
+from src.models import db
 import json
 import traceback
 import redis
-from models.Transcationmodel import transcation_details
-from models.userdetails import UserDetails
+from src.models.Transcationmodel import transcation_details
+from src.models.userdetails import UserDetails
 import jwt
 
 redis_con = redis.Redis(host="localhost",

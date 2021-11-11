@@ -1,4 +1,4 @@
-from models import db
+from src.models import db
 
 class UserDetails(db.Model):
     __tablename__ = 'user_details'

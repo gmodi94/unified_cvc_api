@@ -5,7 +5,7 @@ from flask import jsonify,request
 
 from functools import wraps
 
-from utils.redis_operation import check_user_details
+from src.utils.redis_operation import check_user_details
 # from utils.redis_operations import check_user_details, check_merchant_details
 
 def middleware(func):
