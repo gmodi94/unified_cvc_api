@@ -70,6 +70,8 @@ async def scan(from_id):
     if payload.get("id","")=="":
         return jsonify({"status":False})
     to_id = payload["id"]
+    if to_id == from_id:
+        return {"status":"Same User"}
     t_id = await add_transcations(to_id,from_id)
     sender = await get_user_details(from_id)
     user = await get_user_details(to_id)
