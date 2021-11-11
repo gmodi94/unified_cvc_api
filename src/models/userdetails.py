@@ -11,4 +11,4 @@ class UserDetails(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
     jwt_tokens = db.Column(db.String(250), nullable =True)
-    blob_file = db.Column(db.LargeBinary)
+    blob_file = db.Column(db.String(255),nullable =True)
