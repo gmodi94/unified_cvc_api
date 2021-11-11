@@ -22,7 +22,7 @@ async def send_otp():
         d = request.json
         otp = random.randint(1000,9999)
         if not capability(d['mobile_number']):
-            return "Invalid Whatsapp number"
+            return {"status":"Invalid Whatsapp number"}
         message = f"Your OTP is {otp}"
         expiry_time = (datetime.now() + timedelta(minutes=2)).strftime("%Y-%m-%d %H:%M:%S")
         data = {

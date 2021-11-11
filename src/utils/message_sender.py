@@ -19,6 +19,16 @@ def send_message(payload,channel,phonenumber=None):
         print(r.text)
 
 def capability(mobile_number):
+    url = "https://rapidapi.rmlconnect.net/wbm/bot/v1/contactCapabilities"
+    payload = json.dumps({
+    "contacts": [
+        mobile_number
+    ]
+    })
+    headers = {
+    'Authorization': '617bf20f245383001100f817',
+    'Content-Type': 'application/json'
+    }
     try:
         response = requests.request("POST", url, headers=headers, data=payload)
         response = json.loads(response.text)
