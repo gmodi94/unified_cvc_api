@@ -1,7 +1,7 @@
 from src.main import app
 from flask import request,jsonify
 from src.utils.redis_operation import add_otp, add_transcations, add_user,delete_otp,get_token, get_user_details,validate_otp,fetch_details
-from src.utils.message_sender import send_message
+from src.utils.message_sender import capability, send_message
 from src.config import MESSAGE_PAYLOAD,RICH_TEXT_PAYLOAD,FALLBACK_PAYLOAD
 from src.utils.decorators import middleware
 from src.models import db
@@ -21,6 +21,8 @@ async def send_otp():
         db.create_all()
         d = request.json
         otp = random.randint(1000,9999)
+        if not capability(d['mobile_number']):
+            return "Invalid Whatsapp number"
         message = f"Your OTP is {otp}"
         expiry_time = (datetime.now() + timedelta(minutes=2)).strftime("%Y-%m-%d %H:%M:%S")
         data = {
@@ -105,13 +107,13 @@ async def callback():
             final_payload = RICH_TEXT_PAYLOAD 
             full_name = user_details2.first_name +" "+ user_details2.last_name
             final_payload["phone"] = user_details1.mobile_number
-            final_payload["media"]["caption"] = "Contact Details Received From {}: \n *Name:* {} \n *Mobile Number:* {} \n *Email:* {}  \n *Address:* {}  \n *Notes:* {}".format(user_details2.first_name,full_name,user_details2.mobile_number,user_details2.email,user_details2.address,user_details2.extra_notes)
+            final_payload["media"]["caption"] = "Contact Details Received From {}: \n \n *Name:* {} \n \n *Mobile Number:* {} \n \n *Email:* {}  \n \n *Address:* {}  \n \n *Notes:* {}".format(user_details2.first_name,full_name,user_details2.mobile_number,user_details2.email,user_details2.address,user_details2.extra_notes)
             print(final_payload)
             send_message(final_payload,"wbm")
             # final_payload = RICH_TEXT_PAYLOAD 
             full_name = user_details1.first_name + user_details1.last_name
             final_payload["phone"] = user_details2.mobile_number
-            final_payload["media"]["caption"] = "Contact Details Received From {}: \n *Name:* {} \n *Mobile Number:* {} \n *Email:* {}  \n *Address:* {}  \n *Notes:* {}".format(user_details1.first_name,full_name,user_details1.mobile_number,user_details1.email,user_details1.address,user_details1.extra_notes)
+            final_payload["media"]["caption"] = "Contact Details Received From {}: \n \n *Name:* {} \n \n *Mobile Number:* {} \n \n *Email:* {}  \n \n *Address:* {}  \n \n *Notes:* {}".format(user_details1.first_name,full_name,user_details1.mobile_number,user_details1.email,user_details1.address,user_details1.extra_notes)
             print(final_payload)
             send_message(final_payload,"wbm")
 
@@ -149,6 +151,8 @@ async def registration():
         data = request.json
         # data= ValidateData().load(data)
         await add_user(data)
+        payload = "https://wa.me/+918928894215?text=Hi"
+        send_message(payload,"sms",data["mobile_number"])
         return {"status":"success"}
     except Exception as e:
         traceback.print_exc()
