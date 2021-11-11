@@ -1,4 +1,4 @@
-    from src.main import app
+from src.main import app
 from flask import request,jsonify,redirect
 from src.utils.redis_operation import add_otp, add_transcations, add_user,delete_otp,get_token, get_user_details,validate_otp,fetch_details
 from src.utils.message_sender import capability, send_message
