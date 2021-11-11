@@ -89,7 +89,7 @@ async def add_user(data):
 	db.session.add(user_id)
 	db.session.commit()
 	blob_data =	qr(str(user_id.id),data["first_name"],data["last_name"])
-	user_id.blob_file = blob_data
+	user_id.blob_file = str(blob_data)
 	db.session.commit()
 
 async def add_otp(data,d):
