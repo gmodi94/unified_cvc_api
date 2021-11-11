@@ -30,6 +30,7 @@ async def fetch_details(transaction_id):
 	except:
 		transaction_records = transcation_details.query.filter_by(id=transaction_id).first()
 		transaction_records = [transaction_records.from_id,transaction_records.to_id]
+		return transaction_records
 
 
 
