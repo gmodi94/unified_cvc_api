@@ -1,3 +1,4 @@
+import re
 from src.models.otpdetails import otp_details
 from src.utils.helper import qr
 from src.main import app
@@ -68,6 +69,9 @@ async def add_transcations(to_id,from_id):
 
 async def add_user(data):
 	db.create_all()
+	u = UserDetails.query.filter_by(mobile_number=data["mobile_number"]).first()
+	if u is None:
+		return False
 	insert_data = {
             "first_name" : data["first_name"],
             "last_name" : data["last_name"],
@@ -92,6 +96,7 @@ async def add_user(data):
 	blob_data =	qr(str(user_id.id),data["first_name"],data["last_name"])
 	user_id.blob_file = str(blob_data)
 	db.session.commit()
+	return True
 
 async def add_otp(data,d):
 	try:
