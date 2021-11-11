@@ -37,7 +37,7 @@ async def send_otp():
 async def validate():
     try:
         d = request.json
-
+        
         mobile_number = d["mobile_number"]
         data = await validate_otp(mobile_number)
         data = json.loads(data)
@@ -139,7 +139,7 @@ async def callback():
 
         #     send_message(final_payload,"wbm")
         #send payload via whatsapp channel
-
+        return {"status":"ok"}
     except Exception as e:
         traceback.print_exc()
     return {"status": "ok"}

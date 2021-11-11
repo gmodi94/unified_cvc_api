@@ -96,12 +96,22 @@ async def add_otp(data,d):
 	try:
 		redis_con.hset(f"OTP_DETAILS:{d['mobile_number']}", "Data", json.dumps(data))
 		redis_con.expire(f"OTP_DETAILS:{d['mobile_number']}", 120)
-		otp = otp_details(otp_data=json.dumps(data),mobile_number=d["mobile_number"])
-		db.session.add(otp)
+		otpdata = otp_details.query.filter_by(mobile_number=d['mobile_number']).first()
+		if otpdata is not None:
+			otpdata.otp_data = json.dumps(data)
+			db.session.add(otpdata)
+		else:
+			otp = otp_details(otp_data=json.dumps(data),mobile_number=d["mobile_number"])
+			db.session.add(otp)
 		db.session.commit()
 	except:
-		otp = otp_details(otp_data=json.dumps(data),mobile_number=d["mobile_number"])
-		db.session.add(otp)
+		otpdata = otp_details.query.filter_by(mobile_number=d['mobile_number']).first()
+		if otpdata is not None:
+			otpdata.otp_data = json.dumps(data)
+			db.session.add(otpdata)
+		else:
+			otp = otp_details(otp_data=json.dumps(data),mobile_number=d["mobile_number"])
+			db.session.add(otp)
 		db.session.commit()
 		
 
