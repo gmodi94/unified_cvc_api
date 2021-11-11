@@ -37,7 +37,7 @@ async def send_otp():
 async def validate():
     try:
         d = request.json
-        
+
         mobile_number = d["mobile_number"]
         data = await validate_otp(mobile_number)
         data = json.loads(data)
@@ -45,7 +45,6 @@ async def validate():
         print(expiry_time,expiry_time > datetime.now(),datetime.now())
         if expiry_time > datetime.now():
             if str(data["otp"]) == d["otp"]:
-                await delete_otp(mobile_number)
                 if d["action"]=="sign_up":
                     return {"status":"success",}
                 elif d['action'] == "log_in":
@@ -104,15 +103,15 @@ async def callback():
         if answer == "Yes":
 
             final_payload = RICH_TEXT_PAYLOAD 
-            full_name = user_details2.first_name + user_details2.last_name
+            full_name = user_details2.first_name +" "+ user_details2.last_name
             final_payload["phone"] = user_details1.mobile_number
-            final_payload["media"]["caption"] = "Contact Details Received From {}: \n *Name:* {} \n *Mobile Number:* {} \n *Company Name:* Route Mobile Limited \n *Designation:* Software Developer \n *Address:* {}  \n *Company Details:* {}".format(user_details2.first_name,full_name,user_details2.mobile_number,user_details2.address,user_details2.extra_notes)
+            final_payload["media"]["caption"] = "Contact Details Received From {}: \n *Name:* {} \n *Mobile Number:* {} \n * Email:* {}  \n *Address:* {}  \n * Notes:* {}".format(user_details2.first_name,full_name,user_details2.mobile_number,user_details2.email,user_details2.address,user_details2.extra_notes)
             print(final_payload)
             send_message(final_payload,"wbm")
             # final_payload = RICH_TEXT_PAYLOAD 
             full_name = user_details1.first_name + user_details1.last_name
             final_payload["phone"] = user_details2.mobile_number
-            final_payload["media"]["caption"] = "Contact Details Received From {}: \n *Name:* {} \n *Mobile Number:* {} \n *Company Name:* Route Mobile Limited \n *Designation:* Software Developer \n *Address:* {}  \n *Company Details:* {}".format(user_details1.first_name,full_name,user_details1.mobile_number,user_details1.address,user_details1.extra_notes)
+            final_payload["media"]["caption"] = "Contact Details Received From {}: \n *Name:* {} \n *Mobile Number:* {} \n * Email:* {}  \n *Address:* {}  \n * Notes:* {}".format(user_details1.first_name,full_name,user_details1.mobile_number,user_details1.email,user_details1.address,user_details1.extra_notes)
             print(final_payload)
             send_message(final_payload,"wbm")
 
@@ -121,8 +120,7 @@ async def callback():
             final_payload["phone"] = user_details1.mobile_number
             final_payload["text"] = "Your request has deined by the {}".format(user_details2.first_name)
             send_message(final_payload,"wbm")
-            final_payload = FALLBACK_PAYLOAD
-            final_payload["phone"] = user_details1.mobile_number
+            final_payload["phone"] = user_details2.mobile_number
             final_payload["text"] = "Rejection Successfull"
             send_message(final_payload,"wbm")
 

@@ -74,6 +74,7 @@ async def add_user(data):
             "mobile_number": data["mobile_number"],
             "extra_notes": data["extra_notes"],
             "address": data["address"],
+			"email":data["email"]
         }
 	user_id = UserDetails(**insert_data)
 	print(user_id.last_name)

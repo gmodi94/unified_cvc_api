@@ -6,6 +6,7 @@ class UserDetails(db.Model):
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
     mobile_number = db.Column(db.String(50))
+    email = db.Column(db.String(50))
     extra_notes = db.Column(db.String(50))
     address = db.Column(db.String(250))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
