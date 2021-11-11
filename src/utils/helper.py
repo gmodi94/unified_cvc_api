@@ -26,11 +26,11 @@ def qr(id, first_name, last_name ):
     image.paste(QRimg,(50,70))
     draw = ImageDraw.Draw(image)
     text2 = 'Visiter ID'
-    font = ImageFont.truetype(r'arial.ttf', 20)
+    font = ImageFont.truetype(r'src/utils/arial.ttf', 20)
     draw.text((130, 50), text2, fill='Red',font=font)
     text = f'Name : {first_name} {last_name}'
     text2 = 'Visiter ID'
-    font = ImageFont.truetype(r'arial.ttf', 20)
+    font = ImageFont.truetype(r'src/utils/arial.ttf', 20)
     draw.text((90, 350), text, fill='black',font=font)
     stream =io.BytesIO()
     image.save(stream ,format="png")
