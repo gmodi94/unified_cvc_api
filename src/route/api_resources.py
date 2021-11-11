@@ -18,6 +18,7 @@ import json
 @app.route('/v1/send_otp', methods = ['POST'])
 async def send_otp():
     try:
+        db.create_all()
         d = request.json
         otp = random.randint(1000,9999)
         message = f"Your OTP is {otp}"
@@ -41,6 +42,7 @@ async def validate():
         data = await validate_otp(mobile_number)
         data = json.loads(data)
         expiry_time = datetime.strptime(data["expiry_time"], "%Y-%m-%d %H:%M:%S")
+        print(expiry_time,expiry_time > datetime.now(),datetime.now())
         if expiry_time > datetime.now():
             if str(data["otp"]) == d["otp"]:
                 await delete_otp(mobile_number)

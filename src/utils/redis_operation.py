@@ -1,3 +1,4 @@
+from models.otpdetails import otp_details
 from utils.helper import qr
 from main import app
 from models import db
@@ -16,7 +17,6 @@ redis_con = redis.Redis(host="localhost",
 
 async def fetch_details(transaction_id):
 	try:
-		#fetch transaction and user records using redis
 		transaction_records =redis_con.hmget("Transactions_details:"+str(transaction_id),"from","to")
 		# print(transaction_records)
 		if transaction_records is not None:
@@ -24,22 +24,9 @@ async def fetch_details(transaction_id):
 			to_id = transaction_records[1]
 			print("from_id",from_id,"to_id",to_id)
 			return transaction_records
-		else:
-			raise Exception("transaction_records not found")
-
-		#fetch registration details based on redis key user_details & mob_no
-		registration_records = redis_con.hget("user_details:",user_contact)
-		if registration_records is not None:
-			f_name=registration_records.first_name
-			l_name=registration_records.last_name
-			phn_num=registration_records.mobile_number
-			address=registration_records.address
-			return(from_id,to_id,f_name,l_name,phn_num,address)
-		else:
-			raise Exception("registration_records not found")
-	except Exception:
-		traceback.print_exc()
-		raise Exception("{eror}")
+	except:
+		transaction_records = transcation_details.query.filter_by(id=transaction_id).first()
+		transaction_records = [transaction_records.from_id,transaction_records.to_id]
 
 
 
@@ -67,8 +54,11 @@ async def add_transcations(to_id,from_id):
 	db.session.commit()
 	t_id = t1.id
 	print(t_id)
-	redis_con.hmset("Transactions_details:"+str(t_id),{"from":from_id,"to":to_id})
-	redis_con.expire("Transactions_details:"+str(t_id), 3600)
+	try:
+		redis_con.hmset("Transactions_details:"+str(t_id),{"from":from_id,"to":to_id})
+		redis_con.expire("Transactions_details:"+str(t_id), 3600)
+	except:
+		pass
 	return t_id
 
 
@@ -96,18 +86,43 @@ async def add_user(data):
 	db.session.commit()
 
 async def add_otp(data,d):
+	try:
 		redis_con.hset(f"OTP_DETAILS:{d['mobile_number']}", "Data", json.dumps(data))
 		redis_con.expire(f"OTP_DETAILS:{d['mobile_number']}", 120)
+		otp = otp_details(otp_data=json.dumps(data),mobile_number=d["mobile_number"])
+		db.session.add(otp)
+		db.session.commit()
+	except:
+		otp = otp_details(otp_data=json.dumps(data),mobile_number=d["mobile_number"])
+		db.session.add(otp)
+		db.session.commit()
+		
 
 async def validate_otp(mobile_number):
-	data = redis_con.hget(f"OTP_DETAILS:{mobile_number}", "Data")
-	print(data)
+	try:
+		data = redis_con.hget(f"OTP_DETAILS:{mobile_number}", "Data")
+		print(data)
+	except:
+		otp_data = otp_details.query.filter_by(mobile_number=mobile_number).first()
+		data = otp_data.otp_data
+		print(data)
 	return data
 async def delete_otp(mobile_number):
-    redis_con.delete(f"OTP_DETAILS:{mobile_number}")
+	try:
+		redis_con.delete(f"OTP_DETAILS:{mobile_number}")
+		otp_details.query.filter_by(mobile_number=mobile_number).delete()
+		db.session.commit()
+	except:
+		otp_details.query.filter_by(mobile_number=mobile_number).delete()
+		db.session.commit()	
+
 
 async def get_token(mobile_number):
-	token = redis_con.hget("user_details:"+str(mobile_number),"jwt_tokens")
+	try:
+		token = redis_con.hget("user_details:"+str(mobile_number),"jwt_tokens")
+	except:
+		u = UserDetails.query.filter_by(mobile_number=mobile_number).first()
+		token = u.jwt_tokens
 	return token
 
 async def get_user_details(id):
