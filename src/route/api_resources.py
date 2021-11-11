@@ -105,13 +105,13 @@ async def callback():
             final_payload = RICH_TEXT_PAYLOAD 
             full_name = user_details2.first_name + user_details2.last_name
             final_payload["phone"] = user_details1.mobile_number
-            final_payload["media"]["caption"] = final_payload["media"]["caption"].format(user_details2.first_name,full_name,user_details2.mobile_number,user_details2.address,user_details2.extra_notes)
+            final_payload["media"]["caption"] = "Contact Details Received From {}: \n *Name:* {} \n *Mobile Number:* {} \n *Company Name:* Route Mobile Limited \n *Designation:* Software Developer \n *Address:* {}  \n *Company Details:* {}".format(user_details2.first_name,full_name,user_details2.mobile_number,user_details2.address,user_details2.extra_notes)
             print(final_payload)
             send_message(final_payload,"wbm")
             # final_payload = RICH_TEXT_PAYLOAD 
             full_name = user_details1.first_name + user_details1.last_name
             final_payload["phone"] = user_details2.mobile_number
-            final_payload["media"]["caption"] = final_payload["media"]["caption"].format(user_details1.first_name,full_name,user_details1.mobile_number,user_details1.address,user_details1.extra_notes)
+            final_payload["media"]["caption"] = "Contact Details Received From {}: \n *Name:* {} \n *Mobile Number:* {} \n *Company Name:* Route Mobile Limited \n *Designation:* Software Developer \n *Address:* {}  \n *Company Details:* {}".format(user_details1.first_name,full_name,user_details1.mobile_number,user_details1.address,user_details1.extra_notes)
             print(final_payload)
             send_message(final_payload,"wbm")
 

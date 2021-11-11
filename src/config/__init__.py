@@ -13,7 +13,7 @@ RICH_TEXT_PAYLOAD ={
         "type": "image",
         "url": "https://image.freepik.com/free-photo/business-card-stack-mockup_23-2147687412.jpg",
         "file": "image.jpg",
-        "caption":"Contact Details Received From {}: \n *Name:* {} \n *Mobile Number:* {} \n *Company Name:* Route Mobile Limited \n *Designation:* Software Developer \n *Address:* {}  \n *Company Details:* {}"
+        "caption":""
     }
 
 }
