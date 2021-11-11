@@ -87,31 +87,39 @@ async def scan(from_id):
 async def callback():
     try:
         callback_payload = request.get_json()
-        print("callback_payload",callback_payload)
+        # print("callback_payload",callback_payload)
+        user_contact = callback_payload['user_contact']
 
         #If yes to connect
-        if callback_payload['messages']['interactive']['button_reply']['title'] == "Yes":
-            user_contact = callback_payload['user_contact']
-            transaction_id = callback_payload['messages']['interactive']['button_reply']['id']
+        answer = callback_payload['messages'][0]['interactive']['button_reply']['title']
+        transaction_id = callback_payload['messages'][0]['interactive']['button_reply']['id'].split(":")[1]
+        users = await fetch_details(transaction_id)
+        for user in users:
+            print(user)
+            user_details = await get_user_details(user)
+            if answer == "Yes":
+                final_payload = RICH_TEXT_PAYLOAD 
+                full_name = user_details.first_name + user_details.last_name
+                final_payload["phone"] = user_details.mobile_number
+                final_payload["media"]["caption"] = final_payload["media"]["caption"].format(user_details.first_name,full_name,user_details.mobile_number,user_details.address,user_details.extra_notes)
+                print(final_payload)
+            else:
+                final_payload = FALLBACK_PAYLOAD
+                final_payload["phone"] = user_details.mobile_number
+                final_payload["text"] = "Successfully Rejected" if user == users[1] else "Your request has deined by the user"
 
-            #fetch the registeration details based on the transaction details ka id and return the final payload to be sent
-            #from_id to_id ka two payloads banana hain matlab?? need to ask gaurav
-            from_id,to_id,f_name,l_name,phn_num,address = fetch_details(user_contact,transaction_id)
+            send_message(final_payload,"wbm")
+        #fetch the registeration details based on the transaction details ka id and return the final payload to be sent
+        #from_id to_id ka two payloads banana hain matlab?? need to ask gaurav
+        # from_id,to_id,f_name,l_name,phn_num,address = fetch_details(user_contact,transaction_id)
+        #creation of final_payload
+    # If No
+        # if callback_payload['messages'][0]['interactive']['button_reply']['title'] == "Yes":
+        #     pass
+        # else:
 
-            #creation of final_payload
-            final_payload = RICH_TEXT_PAYLOAD
-            full_name = f_name.title()+l_name.title()
-            final_payload["phone"] = user_contact
-            final_payload["media"]["caption"] = final_payload["media"]["caption"].format(f_name,full_name,phn_num,address)
-            print(final_payload)
-
-        # If No
-        else:
-            final_payload = FALLBACK_PAYLOAD
-            final_payload["phone"] = user_contact
-
+        #     send_message(final_payload,"wbm")
         #send payload via whatsapp channel
-        send_message(final_payload,"wbm")
 
     except Exception as e:
         traceback.print_exc()

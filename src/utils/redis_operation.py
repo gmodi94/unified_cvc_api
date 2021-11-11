@@ -14,15 +14,16 @@ redis_con = redis.Redis(host="localhost",
                         decode_responses=True)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 
-async def fetch_details(user_contact,transaction_id):
+async def fetch_details(transaction_id):
 	try:
 		#fetch transaction and user records using redis
-		transaction_records =redis_con.hget("Transactions_details:"+str(transaction_id))
+		transaction_records =redis_con.hmget("Transactions_details:"+str(transaction_id),"from","to")
 		# print(transaction_records)
 		if transaction_records is not None:
-			from_id = transaction_records.from
-			to_id = transaction_records.to
+			from_id = transaction_records[0]
+			to_id = transaction_records[1]
 			print("from_id",from_id,"to_id",to_id)
+			return transaction_records
 		else:
 			raise Exception("transaction_records not found")
 
