@@ -6,12 +6,12 @@ from PIL import ImageDraw
 import base64
 def qr(id, first_name, last_name ):
     image = Image.new('RGB',(400,500),(255,255,255))
-    # Logo_link = 'unified_cvc_api/src/utils/cvc.jpeg'
-    # logo = Image.open(Logo_link)
+    Logo_link = 'src/utils/cvc.jpeg'
+    logo = Image.open(Logo_link)
     basewidth = 40
-    # wpercent = (basewidth/float(logo.size[0]))
-    # hsize = int((float(logo.size[1])*float(wpercent)))
-    # logo = logo.resize((basewidth, hsize), Image.ANTIALIAS)
+    wpercent = (basewidth/float(logo.size[0]))
+    hsize = int((float(logo.size[1])*float(wpercent)))
+    logo = logo.resize((basewidth, hsize), Image.ANTIALIAS)
     QRcode = qrcode.QRCode(
         error_correction=qrcode.constants.ERROR_CORRECT_H
     )
@@ -20,18 +20,17 @@ def qr(id, first_name, last_name ):
     QRcolor = 'Black'
     QRimg = QRcode.make_image(
         fill_color=QRcolor, back_color="white").convert('RGB')
-    # pos = ((QRimg.size[0] - logo.size[0]) // 2,
-        # (QRimg.size[1] - logo.size[1]) // 2)
-    # QRimg.paste(logo, pos)
+    pos = ((QRimg.size[0] - logo.size[0]) // 2,
+        (QRimg.size[1] - logo.size[1]) // 2)
+    QRimg.paste(logo, pos)
     image.paste(QRimg,(50,70))
     draw = ImageDraw.Draw(image)
     text2 = 'Visiter ID'
     font = ImageFont.truetype(r'src/utils/arial.ttf', 20)
-    draw.text((130, 50), text2, fill='Red',font=font)
+    draw.text((130, 50), text2, fill='black',font=font)
     text = f'Name : {first_name} {last_name}'
-    text2 = 'Visiter ID'
-    font = ImageFont.truetype(r'src/utils/arial.ttf', 20)
-    draw.text((90, 350), text, fill='black',font=font)
+    font = ImageFont.truetype(r'src/utils/arial.ttf', 25)
+    draw.text((100, 350), text, fill='black',font=font)
     stream =io.BytesIO()
     image.save(stream ,format="png")
     blobdata = stream.getvalue()
