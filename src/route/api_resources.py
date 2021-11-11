@@ -48,7 +48,7 @@ async def validate():
                 if d["action"]=="sign_up":
                     return {"status":"success",}
                 elif d['action'] == "log_in":
-                    blob ,token = await get_token(mobile_number)
+                    token, blob = await get_token(mobile_number)
                     print(blob)
                     return {"status":"success","token":token,"qrimage":str(blob)}
             else:
