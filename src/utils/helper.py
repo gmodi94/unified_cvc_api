@@ -29,20 +29,20 @@ def qr(id, first_name, last_name ):
         (QRimg.size[1] - logo.size[1]) // 2)
     QRimg.paste(logo, pos)
 
-    image.paste(QRimg.resize((100, 100)),(50,70))
+    image.paste(QRimg.resize((250, 250)),(70,100))
     draw = ImageDraw.Draw(image)
-    text2 = 'Visiter ID'
-    font = ImageFont.truetype(r'src/utils/arial.ttf', 20)
-    draw.text((130, 50), text2, fill='black',font=font)
+    text2 = 'Visitor ID'
+    font = ImageFont.truetype(r'src/utils/arial.ttf', 25)
+    draw.text((140, 50), text2, fill='black',font=font)
     text = f'Name : {first_name} {last_name}'
     font = ImageFont.truetype(r'src/utils/arial.ttf', 25)
-    draw.text((100, 350), text, fill='black',font=font)
+    draw.text((80, 380), text, fill='black',font=font)
     stream =io.BytesIO()
     image.save(stream ,format="png")
     blobdata = stream.getvalue()
     blobdata = base64.b64encode(blobdata)
     # print(base64.b64encode(blobdata))
-    return blobdata
+    return blobdata.decode()
     
 def create_blob():
     image_file = open('hi.png','rb').read()
