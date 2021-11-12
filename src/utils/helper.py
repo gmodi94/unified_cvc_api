@@ -4,6 +4,7 @@ from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw 
 import base64
+import json
 def qr(id, first_name, last_name ):
     image = Image.new('RGB',(400,500),(255,255,255))
     Logo_link = 'src/utils/cvc.jpeg'
@@ -15,7 +16,11 @@ def qr(id, first_name, last_name ):
     QRcode = qrcode.QRCode(
         error_correction=qrcode.constants.ERROR_CORRECT_H
     )
-    QRcode.add_data(id)
+    fulldata = json.dumps({
+        "id":id,
+        "Name":first_name+" "+last_name
+    })
+    QRcode.add_data(fulldata)
     QRcode.make()
     QRcolor = 'Black'
     QRimg = QRcode.make_image(

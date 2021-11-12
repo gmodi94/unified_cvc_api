@@ -1,6 +1,6 @@
 from src.main import app
 from flask import request,jsonify,redirect
-from src.utils.redis_operation import add_otp, add_transcations, add_user,delete_otp,get_token, get_user_details,validate_otp,fetch_details
+from src.utils.redis_operation import add_otp, add_transcations, add_user,delete_otp,get_token, get_user_details, up_transaction,validate_otp,fetch_details
 from src.utils.message_sender import capability, send_message
 from src.config import MESSAGE_PAYLOAD, RCS_PAYLOAD,RICH_TEXT_PAYLOAD,FALLBACK_PAYLOAD
 from src.utils.decorators import middleware
@@ -100,6 +100,8 @@ async def callback():
         answer = callback_payload['messages'][0]['interactive']['button_reply']['title']
         transaction_id = callback_payload['messages'][0]['interactive']['button_reply']['id'].split(":")[1]
         users = await fetch_details(transaction_id)
+        if users == "True" :
+            return {"status":"ok"}
         user_details1 = await get_user_details(users[0])
         user_details2 = await get_user_details(users[1])
         users = [user_details1,user_details2]
@@ -166,6 +168,7 @@ async def callback():
 
         #     send_message(final_payload,"wbm")
         #send payload via whatsapp channel
+        await up_transaction(transaction_id)
         return {"status":"ok"}
     except Exception as e:
         traceback.print_exc()

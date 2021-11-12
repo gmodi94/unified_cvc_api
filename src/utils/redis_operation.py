@@ -30,9 +30,15 @@ async def fetch_details(transaction_id):
 			return transaction_records
 	except:
 		transaction_records = transcation_details.query.filter_by(id=transaction_id).first()
+		if transaction_records.status == "Complete":
+			return "True"
 		transaction_records = [transaction_records.from_id,transaction_records.to_id]
 		return transaction_records
 
+async def up_transaction(transaction_id):
+	transaction_records = transcation_details.query.filter_by(id=transaction_id).first()
+	transaction_records.status = "Complete"
+	db.session.commit()
 
 
 async def check_user_details(user):
