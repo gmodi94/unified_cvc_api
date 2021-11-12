@@ -28,7 +28,8 @@ def qr(id, first_name, last_name ):
     pos = ((QRimg.size[0] - logo.size[0]) // 2,
         (QRimg.size[1] - logo.size[1]) // 2)
     QRimg.paste(logo, pos)
-    image.paste(QRimg,(50,70))
+
+    image.paste(QRimg.resize((100, 100)),(50,70))
     draw = ImageDraw.Draw(image)
     text2 = 'Visiter ID'
     font = ImageFont.truetype(r'src/utils/arial.ttf', 20)
