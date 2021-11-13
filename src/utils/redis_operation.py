@@ -174,6 +174,7 @@ async def check_ban(from_id,to_id=""):
 	print(banlen)
 	if to_id != "":
 		u = transcation_details.query.filter(transcation_details.from_id==from_id,transcation_details.to_id==to_id).options(load_only("status")).first()
+		print("user data " ,u)
 		if u is None:
 			return False
 		if u.status == "ban":

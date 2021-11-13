@@ -69,7 +69,6 @@ async def validate():
 async def scan(from_id):
     payload = request.get_json()
     print(from_id)
-
     if payload.get("id","")=="":
         return jsonify({"status":False})
     to_id = payload["id"]
