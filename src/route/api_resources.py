@@ -182,7 +182,7 @@ async def callback():
                 number = callback_payload["messages"][0]["from"]
                 payload = SIMPLEPAYLOAD
                 payload["phone"] = "+"+number
-                payload["text"] = "Hi Welcome to CVC , \nIf You wish to get all your connection Please type my contacts"
+                payload["text"] = "Hi Welcome to CVC , \nIf You wish to get all your connection Please type \"my contacts\""
                 send_message(payload,"wbm")
 
 
