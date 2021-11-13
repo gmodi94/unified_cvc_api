@@ -207,7 +207,7 @@ async def callback():
     return {"status": "ok"}
 
 
-@app.route('/v1/registration',methods = ['POST'])
+@app.route('/v1/registration',methods=['POST'])
 async def registration():
     try:
         data = request.json
@@ -222,7 +222,7 @@ async def registration():
         traceback.print_exc()
         return {"status": "failed", "errors": "Contact administration for more info"},500
 
-@app.route("/v1/bulksend")
+@app.route("/v1/bulksend",methods=["POST"])
 @middleware
 async def send_bulk(from_id):
     try:
