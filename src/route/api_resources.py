@@ -253,7 +253,7 @@ async def send_bulk(from_id):
                     payload["card"]["title"] = "Message From "+from_user.first_name
                     payload["card"]["url"] = url
                     send_message(payload,"rcs")
-                else :
+                else:
                     payload = BULKPAYLOAD
                     payload['phone'] = user.mobile_number
                     payload["media"]["url"] = url
