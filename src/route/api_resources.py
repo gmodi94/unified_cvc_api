@@ -230,6 +230,7 @@ async def send_bulk(from_id):
             return {"status":"You are been ban"}
         from_user = await get_user_details(from_id)
         url = request.get_json().get("url")
+        channel = request.get_json().get("channel","")
         response = requests.get(url)
         content_type = response.headers['content-type']
         extension = mimetypes.guess_extension(content_type)
@@ -240,11 +241,17 @@ async def send_bulk(from_id):
         for user in users:
             user = await get_user_details(user)
             if not await check_ban(from_id,str(user.id)):
-                payload = BULKPAYLOAD
-                payload['phone'] = user.mobile_number
-                payload["media"]["url"] = url
-                payload["media"]["caption"] = "Message From "+from_user.first_name 
-                send_message(payload,"wbm")
+                if channel == "Whatsapp":
+                    payload = BULKPAYLOAD
+                    payload['phone'] = user.mobile_number
+                    payload["media"]["url"] = url
+                    payload["media"]["caption"] = "Message From "+from_user.first_name 
+                    send_message(payload,"wbm")
+                elif channel == "RCS":
+                    payload = RCS_BULK_PAYLOAD
+                    payload["phone_no"] = user.mobile_number  
+                    payload["card"]["title"] = "Message From "+from_user.first_name
+                    payload["card"]["url"] = url
         return {"status":"success"}
     except Exception as e:
         return{"url":"invalid "+str(e)}

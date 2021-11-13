@@ -73,3 +73,14 @@ BULKPAYLOAD = {
     },
     "extra": "sampleim"
 }
+
+RCS_BULK_PAYLOAD = {
+	"type": "card",
+	"phone_no": "",
+	"bot_name": "Routemobile",
+	"card": {
+		"title": "",
+		"description": "Look my new service",
+		"url": ""}
+
+}
