@@ -168,7 +168,7 @@ async def get_user_details_from_number(mobile_number):
 
 async def check_ban(from_id,to_id=""):
 	u = transcation_details.query.filter(transcation_details.from_id==from_id).options(load_only("status")).all()
-	lisoft = [i.id for i in u if i.status == "ban"]
+	lisoft = [i.to_id for i in u if i.status == "ban"]
 	banlen = len(lisoft)
 	print(lisoft)
 	if banlen > 2:
