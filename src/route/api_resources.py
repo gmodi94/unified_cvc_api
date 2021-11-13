@@ -108,6 +108,7 @@ async def callback():
             answer = callback_payload['messages'][0]['interactive']['button_reply']['title']
             transaction_id = callback_payload['messages'][0]['interactive']['button_reply']['id'].split(":")[1]
             users = await fetch_details(transaction_id)
+            print(users)
             if users == "True" :
                 return {"status":"ok"}
             user_details1 = await get_user_details(users[0])
