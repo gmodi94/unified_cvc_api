@@ -80,6 +80,8 @@ async def scan(from_id):
     t_id = await add_transcations(to_id,from_id)
     sender = await get_user_details(from_id)
     user = await get_user_details(to_id)
+    if user is None:
+        return {"status":"user does not exist"}
     number = user.mobile_number
     name = user.first_name
     sendername = sender.first_name
