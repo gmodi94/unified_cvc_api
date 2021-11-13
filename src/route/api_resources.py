@@ -246,8 +246,8 @@ async def send_bulk(from_id):
                 payload["media"]["caption"] = "Message From "+from_user.first_name 
                 send_message(payload,"wbm")
         return {"status":"success"}
-    except:
-        return{"url":"invalid"}
+    except Exception as e:
+        return{"url":"invalid "+str(e)}
     
     
 
