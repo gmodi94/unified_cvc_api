@@ -135,7 +135,7 @@ async def validate_otp(mobile_number):
 	except:
 		otp_data = otp_details.query.filter_by(mobile_number=mobile_number).first()
 		data = otp_data.otp_data
-		print(data)
+		print(type(data))
 	return data
 async def delete_otp(mobile_number):
 	try:
