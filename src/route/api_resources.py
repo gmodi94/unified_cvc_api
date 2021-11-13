@@ -238,8 +238,8 @@ async def send_bulk(from_id):
             return {"error":"only img file"}
         users = await get_list(from_id)
         for user in users:
+            user = await get_user_details(user)
             if not await check_ban(from_id,str(user.id)):
-                user = await get_user_details(user)
                 payload = BULKPAYLOAD
                 payload['phone'] = user.mobile_number
                 payload["media"]["url"] = url
