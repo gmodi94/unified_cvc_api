@@ -252,6 +252,20 @@ async def send_bulk(from_id):
                     payload["phone_no"] = user.mobile_number  
                     payload["card"]["title"] = "Message From "+from_user.first_name
                     payload["card"]["url"] = url
+                    send_message(payload,"rcs")
+                else :
+                    payload = BULKPAYLOAD
+                    payload['phone'] = user.mobile_number
+                    payload["media"]["url"] = url
+                    payload["media"]["caption"] = "Message From "+from_user.first_name 
+                    send_message(payload,"wbm")
+                    payload = RCS_BULK_PAYLOAD
+                    payload["phone_no"] = user.mobile_number  
+                    payload["card"]["title"] = "Message From "+from_user.first_name
+                    payload["card"]["url"] = url
+                    send_message(payload,"rcs")
+                    
+
         return {"status":"success"}
     except Exception as e:
         return{"url":"invalid "+str(e)}
