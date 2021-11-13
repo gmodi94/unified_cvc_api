@@ -69,9 +69,13 @@ async def validate():
 async def scan(from_id):
     payload = request.get_json()
     print(from_id)
+
     if payload.get("id","")=="":
         return jsonify({"status":False})
     to_id = payload["id"]
+    user = await get_user_details(to_id)
+    if user is None:
+        return {"status":"user does not exist"}
     if to_id == from_id:
         return {"status":"Same User"}
     if await check_ban(from_id,to_id):
