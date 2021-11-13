@@ -183,6 +183,6 @@ async def check_ban(from_id,to_id=""):
 
 
 async def get_list(id):
-	u = transcation_details.query.filter(transcation_details.from_id==id).options(load_only("to_id")).all()
+	u = transcation_details.query.filter(transcation_details.from_id==id,transcation_details.status=="Complete").options(load_only("to_id")).all()
 	listofusers = list(set([i.to_id for i in u ]))
 	return listofusers
