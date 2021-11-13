@@ -166,13 +166,19 @@ async def get_user_details_from_number(mobile_number):
 	print(user)
 	return user
 
-async def check_ban(id):
-	u = transcation_details.query.filter(transcation_details.from_id==id).options(load_only("status")).all()
+async def check_ban(from_id,to_id=""):
+	u = transcation_details.query.filter(transcation_details.from_id==from_id).options(load_only("status")).all()
 	banlen = len([i for i in u if i.status == "ban"])
 	if banlen > 2:
 		return True
 	print(banlen)
+	if to_id != "":
+		u = transcation_details.query.filter(transcation_details.from_id==from_id,transcation_details.to_id==to_id).options(load_only("status")).first()
+		if u.status == "ban":
+			return True
 	return False
+	
+
 
 async def get_list(id):
 	u = transcation_details.query.filter(transcation_details.from_id==id).options(load_only("to_id")).all()

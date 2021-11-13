@@ -74,7 +74,7 @@ async def scan(from_id):
     to_id = payload["id"]
     if to_id == from_id:
         return {"status":"Same User"}
-    if await check_ban(from_id):
+    if await check_ban(from_id,to_id):
         return {"status":"You are been ban"}
 
     t_id = await add_transcations(to_id,from_id)
@@ -238,12 +238,13 @@ async def send_bulk(from_id):
             return {"error":"only img file"}
         users = await get_list(from_id)
         for user in users:
-            user = await get_user_details(user)
-            payload = BULKPAYLOAD
-            payload['phone'] = user.mobile_number
-            payload["media"]["url"] = url
-            payload["media"]["caption"] = "Message From "+from_user.first_name 
-            send_message(payload,"wbm")
+            if not await check_ban(from_id,str(user.id)):
+                user = await get_user_details(user)
+                payload = BULKPAYLOAD
+                payload['phone'] = user.mobile_number
+                payload["media"]["url"] = url
+                payload["media"]["caption"] = "Message From "+from_user.first_name 
+                send_message(payload,"wbm")
         return {"status":"success"}
     except:
         return{"url":"invalid"}
