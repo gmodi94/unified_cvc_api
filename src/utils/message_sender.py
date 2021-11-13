@@ -11,7 +11,6 @@ def send_message(payload,channel,phonenumber=None):
         'Authorization': '617bf20f245383001100f817',
         'Content-Type': 'application/json'
         }
-
         response = requests.request("POST", url, headers=headers, data=payload)
         print(response.text)
     elif channel == "sms":

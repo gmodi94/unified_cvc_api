@@ -1,7 +1,7 @@
 MESSAGE_PAYLOAD = { "phone": "",
                     "media": {"type": "interactive_reply",
                             "header": {"text": "Request for Consent" },
-                                            "body": "HI {}, Do you Want to Exchange visiting card with {}", "footer_text": "c@2021", "button": [ { "id": "56", "title": "Yes" }, { "id": "55", "title": "No" } ] } }
+                                            "body": "HI {}, Do you Want to Exchange visiting card with {}", "footer_text": "c@2021", "button": [ { "id": "56", "title": "Yes" }, { "id": "55", "title": "No" },{ "id": "55", "title": "Spam" } ] } }
 
 
 RICH_TEXT_PAYLOAD ={
@@ -20,6 +20,10 @@ FALLBACK_PAYLOAD = {
         "text":""
 }
 
+SIMPLEPAYLOAD ={
+    "phone": "",
+    "text": "Hello  from test"
+}
 
 #old callback payload sample for reference
 # CALLBACK_PAYLOAD = {"contacts": [{"profile": {"name": "Sheetal kashid"}, "wa_id": "919152762343"}],
@@ -56,4 +60,16 @@ RCS_PAYLOAD = {
 		}
 		]
 	}
+}
+
+
+BULKPAYLOAD = {
+    "phone": "",
+    "media": {
+        "type": "image",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/3/3f/JPEG_example_flower.jpg",
+        "file": "flower.jpg",
+        "caption": "Message From"
+    },
+    "extra": "sampleim"
 }

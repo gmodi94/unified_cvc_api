@@ -1,11 +1,13 @@
 from src.main import app
 from flask import request,jsonify,redirect
-from src.utils.redis_operation import add_otp, add_transcations, add_user,delete_otp,get_token, get_user_details, up_transaction,validate_otp,fetch_details
+from src.utils.redis_operation import *
 from src.utils.message_sender import capability, send_message
-from src.config import MESSAGE_PAYLOAD, RCS_PAYLOAD,RICH_TEXT_PAYLOAD,FALLBACK_PAYLOAD
+from src.config import *
 from src.utils.decorators import middleware
 from src.models import db
 from datetime import timedelta,datetime
+import requests
+import mimetypes
 
 # from models.userdetails import UserDetails
 import traceback
@@ -72,6 +74,9 @@ async def scan(from_id):
     to_id = payload["id"]
     if to_id == from_id:
         return {"status":"Same User"}
+    if await check_ban(from_id):
+        return {"status":"You are been ban"}
+
     t_id = await add_transcations(to_id,from_id)
     sender = await get_user_details(from_id)
     user = await get_user_details(to_id)
@@ -83,6 +88,7 @@ async def scan(from_id):
     payload["media"]["body"] = payload["media"]["body"].format(name,sendername)
     payload["media"]["button"][0]["id"] = "yes:"+str(t_id)
     payload["media"]["button"][1]["id"] = "no:"+str(t_id)
+    payload["media"]["button"][2]["id"] = "Spam:"+str(t_id)
     print(payload)
     send_message(payload,"wbm")
     return jsonify({"status":True})
@@ -95,65 +101,92 @@ async def callback():
         callback_payload = request.get_json()
         # print("callback_payload",callback_payload)
         # user_contact = callback_payload['user_contact']
-
         #If yes to connect
-        answer = callback_payload['messages'][0]['interactive']['button_reply']['title']
-        transaction_id = callback_payload['messages'][0]['interactive']['button_reply']['id'].split(":")[1]
-        users = await fetch_details(transaction_id)
-        if users == "True" :
-            return {"status":"ok"}
-        user_details1 = await get_user_details(users[0])
-        user_details2 = await get_user_details(users[1])
-        users = [user_details1,user_details2]
-            
-        if answer == "Yes":
-            final_payload = RICH_TEXT_PAYLOAD 
-            full_name = user_details2.first_name +" "+ user_details2.last_name
-            final_payload["phone"] = user_details1.mobile_number
-            final_payload["media"]["caption"] = "Contact Details Received From {}: \n \n *Name:* {} \n \n *Mobile Number:* {} \n \n *Email:* {}  \n \n *Address:* {}  \n \n *Notes:* {}".format(user_details2.first_name,full_name,user_details2.mobile_number,user_details2.email,user_details2.address,user_details2.extra_notes)
-            print(final_payload)
-            send_message(final_payload,"wbm")
-            # final_payload = RICH_TEXT_PAYLOAD 
-            full_name = user_details1.first_name + user_details1.last_name
-            final_payload["phone"] = user_details2.mobile_number
-            final_payload["media"]["caption"] = "Contact Details Received From {}: \n \n *Name:* {} \n \n *Mobile Number:* {} \n \n *Email:* {}  \n \n *Address:* {}  \n \n *Notes:* {}".format(user_details1.first_name,full_name,user_details1.mobile_number,user_details1.email,user_details1.address,user_details1.extra_notes)
-            print(final_payload)
-            send_message(final_payload,"wbm")
+        if'interactive' in callback_payload["messages"][0].keys():
+            answer = callback_payload['messages'][0]['interactive']['button_reply']['title']
+            transaction_id = callback_payload['messages'][0]['interactive']['button_reply']['id'].split(":")[1]
+            users = await fetch_details(transaction_id)
+            if users == "True" :
+                return {"status":"ok"}
+            user_details1 = await get_user_details(users[0])
+            user_details2 = await get_user_details(users[1])
+            users = [user_details1,user_details2]
+                
+            if answer == "Yes":
+                final_payload = RICH_TEXT_PAYLOAD 
+                full_name = user_details2.first_name +" "+ user_details2.last_name
+                final_payload["phone"] = user_details1.mobile_number
+                final_payload["media"]["caption"] = "Contact Details Received From {}: \n \n*Name:* {} \n \n*Mobile Number:* {} \n \n*Email:* {}  \n \n*Address:* {}  \n \n*Notes:* {}".format(user_details2.first_name,full_name,user_details2.mobile_number,user_details2.email,user_details2.address,user_details2.extra_notes)
+                print(final_payload)
+                send_message(final_payload,"wbm")
+                # final_payload = RICH_TEXT_PAYLOAD 
+                full_name = user_details1.first_name + user_details1.last_name
+                final_payload["phone"] = user_details2.mobile_number
+                final_payload["media"]["caption"] = "Contact Details Received From {}: \n \n*Name:* {} \n \n*Mobile Number:* {} \n \n*Email:* {}  \n \n*Address:* {}  \n \n*Notes:* {}".format(user_details1.first_name,full_name,user_details1.mobile_number,user_details1.email,user_details1.address,user_details1.extra_notes)
+                print(final_payload)
+                send_message(final_payload,"wbm")
 
-            rcspayload = RCS_PAYLOAD
-            full_name = user_details1.first_name +" "+ user_details1.last_name
-            rcspayload['phone_no'] = user_details2.mobile_number
-            rcspayload['card']['title'] = "Bussiness Card of "+full_name
-            rcspayload['card']['suggestions'][0]['text'] = "Whatsapp "+user_details2.first_name
-            rcspayload['card']['suggestions'][1]['text'] = "Mail "+user_details2.first_name
-            rcspayload['card']['suggestions'][2]['text'] = "Call "+user_details2.first_name
-            rcspayload['card']['suggestions'][0]['url'] = "http://wa.me/"+user_details1.mobile_number
-            rcspayload['card']['suggestions'][1]['url'] = "https://conviscard.herokuapp.com/mail?mail="+user_details1.email
-            rcspayload['card']['suggestions'][2]['call_to'] = user_details1.mobile_number
+                rcspayload = RCS_PAYLOAD
+                full_name = user_details1.first_name +" "+ user_details1.last_name
+                rcspayload['phone_no'] = user_details2.mobile_number
+                rcspayload['card']['title'] = "Bussiness Card of "+full_name
+                rcspayload['card']['suggestions'][0]['text'] = "Whatsapp "+user_details2.first_name
+                rcspayload['card']['suggestions'][1]['text'] = "Mail "+user_details2.first_name
+                rcspayload['card']['suggestions'][2]['text'] = "Call "+user_details2.first_name
+                rcspayload['card']['suggestions'][0]['url'] = "http://wa.me/"+user_details1.mobile_number
+                rcspayload['card']['suggestions'][1]['url'] = "https://conviscard.herokuapp.com/mail?mail="+user_details1.email
+                rcspayload['card']['suggestions'][2]['call_to'] = user_details1.mobile_number
 
-            send_message(rcspayload,"rcs")
+                send_message(rcspayload,"rcs")
 
-            full_name = user_details2.first_name +" "+ user_details2.last_name
-            rcspayload['phone_no'] = user_details1.mobile_number
-            rcspayload['card']['title'] = "Bussiness Card of "+full_name
-            rcspayload['card']['suggestions'][0]['text'] = "Whatsapp "+user_details2.first_name
-            rcspayload['card']['suggestions'][1]['text'] = "Mail "+user_details2.first_name
-            rcspayload['card']['suggestions'][2]['text'] = "Call "+user_details2.first_name
-            rcspayload['card']['suggestions'][0]['url'] = "http://wa.me/"+user_details2.mobile_number
-            rcspayload['card']['suggestions'][1]['url'] = "https://conviscard.herokuapp.com/mail?mail="+user_details2.email
-            rcspayload['card']['suggestions'][2]['call_to'] = user_details2.mobile_number
+                full_name = user_details2.first_name +" "+ user_details2.last_name
+                rcspayload['phone_no'] = user_details1.mobile_number
+                rcspayload['card']['title'] = "Bussiness Card of "+full_name
+                rcspayload['card']['suggestions'][0]['text'] = "Whatsapp "+user_details2.first_name
+                rcspayload['card']['suggestions'][1]['text'] = "Mail "+user_details2.first_name
+                rcspayload['card']['suggestions'][2]['text'] = "Call "+user_details2.first_name
+                rcspayload['card']['suggestions'][0]['url'] = "http://wa.me/"+user_details2.mobile_number
+                rcspayload['card']['suggestions'][1]['url'] = "https://conviscard.herokuapp.com/mail?mail="+user_details2.email
+                rcspayload['card']['suggestions'][2]['call_to'] = user_details2.mobile_number
 
-            send_message(rcspayload,"rcs")
+                send_message(rcspayload,"rcs")
+                await up_transaction(transaction_id,"Complete")
 
 
-        elif answer == "No":
-            final_payload = FALLBACK_PAYLOAD
-            final_payload["phone"] = user_details1.mobile_number
-            final_payload["text"] = "Your request has deined by {}".format(user_details2.first_name)
-            send_message(final_payload,"wbm")
-            final_payload["phone"] = user_details2.mobile_number
-            final_payload["text"] = "Rejection Successfull"
-            send_message(final_payload,"wbm")
+
+            elif answer == "No":
+                final_payload = FALLBACK_PAYLOAD
+                final_payload["phone"] = user_details1.mobile_number
+                final_payload["text"] = "Your request has deined by {}".format(user_details2.first_name)
+                send_message(final_payload,"wbm")
+                final_payload["phone"] = user_details2.mobile_number
+                final_payload["text"] = "Rejection Successfull"
+                send_message(final_payload,"wbm")
+                await up_transaction(transaction_id,"Failed")
+
+            elif answer == "Spam":
+                await up_transaction(transaction_id,"ban")
+        elif "text" in callback_payload["messages"][0].keys():
+            if callback_payload["messages"][0]["text"]["body"].lower() == "my contacts":
+                number = callback_payload["messages"][0]["from"]
+                user = await get_user_details_from_number("+"+number)
+                users = await get_list(str(user.id))
+                for user in users:
+                    user = await get_user_details(user)
+                    final_payload = RICH_TEXT_PAYLOAD 
+                    full_name = user.first_name + user.last_name
+                    final_payload["phone"] = "+"+number
+                    final_payload["media"]["caption"] = "Contact Details Received From {}: \n \n*Name:* {} \n \n*Mobile Number:* {} \n \n*Email:* {}  \n \n*Address:* {}  \n \n*Notes:* {}".format(user.first_name,full_name,user.mobile_number,user.email,user.address,user.extra_notes)
+                    send_message(final_payload,"wbm")
+            else:
+                number = callback_payload["messages"][0]["from"]
+                payload = SIMPLEPAYLOAD
+                payload["phone"] = "+"+number
+                payload["text"] = "Hi Welcome to CVC , \nIf You wish to get all your connection Please type my contacts"
+                send_message(payload,"wbm")
+
+
+
 
 
 
@@ -168,7 +201,6 @@ async def callback():
 
         #     send_message(final_payload,"wbm")
         #send payload via whatsapp channel
-        await up_transaction(transaction_id)
         return {"status":"ok"}
     except Exception as e:
         traceback.print_exc()
@@ -190,11 +222,45 @@ async def registration():
         traceback.print_exc()
         return {"status": "failed", "errors": "Contact administration for more info"},500
 
+@app.route("/v1/bulksend")
+@middleware
+async def send_bulk(from_id):
+    try:
+        if await check_ban(from_id):
+            return {"status":"You are been ban"}
+        from_user = await get_user_details(from_id)
+        url = request.get_json().get("url")
+        response = requests.get(url)
+        content_type = response.headers['content-type']
+        extension = mimetypes.guess_extension(content_type)
+        if extension not in [".png",".jpg",".jpeg"]:
+            print(extension)
+            return {"error":"only img file"}
+        users = await get_list(from_id)
+        for user in users:
+            user = await get_user_details(user)
+            payload = BULKPAYLOAD
+            payload['phone'] = user.mobile_number
+            payload["media"]["url"] = url
+            payload["media"]["caption"] = "Message From "+from_user.first_name 
+            send_message(payload,"wbm")
+        return {"status":"success"}
+    except:
+        return{"url":"invalid"}
+    
+    
+
+
+
+
+
 @app.route('/mail')
 def mail():
     user = request.args.get('mail')
-
     return redirect('mailto:{}'.format(user))
+
+
+
 
 if "__main__" == __name__:
     db.create_all()

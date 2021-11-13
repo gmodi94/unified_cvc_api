@@ -1,4 +1,6 @@
 import re
+
+from sqlalchemy.orm import load_only
 from src.models.otpdetails import otp_details
 from src.utils.helper import qr
 from src.main import app
@@ -9,7 +11,6 @@ import redis
 from src.models.Transcationmodel import transcation_details
 from src.models.userdetails import UserDetails
 import jwt
-
 try:
 	redis_con = redis.Redis(host="localhost",
 							port=6379,
@@ -35,9 +36,9 @@ async def fetch_details(transaction_id):
 		transaction_records = [transaction_records.from_id,transaction_records.to_id]
 		return transaction_records
 
-async def up_transaction(transaction_id):
+async def up_transaction(transaction_id,status):
 	transaction_records = transcation_details.query.filter_by(id=transaction_id).first()
-	transaction_records.status = "Complete"
+	transaction_records.status = status
 	db.session.commit()
 
 
@@ -159,3 +160,21 @@ async def get_user_details(id):
 	user = UserDetails.query.filter_by(id=id).first()
 	print(user)
 	return user
+
+async def get_user_details_from_number(mobile_number):
+	user = UserDetails.query.filter_by(mobile_number=mobile_number).first()
+	print(user)
+	return user
+
+async def check_ban(id):
+	u = transcation_details.query.filter(transcation_details.from_id==id).options(load_only("status")).all()
+	banlen = len([i for i in u if i.status == "ban"])
+	if banlen > 2:
+		return True
+	print(banlen)
+	return False
+
+async def get_list(id):
+	u = transcation_details.query.filter(transcation_details.from_id==id).options(load_only("to_id")).all()
+	listofusers = list(set([i.to_id for i in u ]))
+	return listofusers
