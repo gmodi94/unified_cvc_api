@@ -54,8 +54,8 @@ def create_blob():
 def csv_to_base64(csvdata,users):
     f = open(f"contact{users}.csv","a+")
     csv.writer(f).writerows(csvdata)
-    f.close()
     data = base64.b64encode(f.read().encode())
+    f.close()
     print(data)
     return data
 
