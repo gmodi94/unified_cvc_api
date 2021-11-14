@@ -200,6 +200,13 @@ async def callback():
                     payload["phone"] = "+"+number
                     payload["text"] = "You have no connection till Now"
                     send_message(payload,"wbm")
+            elif callback_payload["messages"][0]["text"]["body"].lower() in ["hi","hello","hey"]:
+                number = callback_payload["messages"][0]["from"]
+                payload = SIMPLEPAYLOAD
+                payload["phone"] = "+"+number
+                payload["text"] = "Welcome to Contactless Visiting Card Service"
+
+
             else:
                 number = callback_payload["messages"][0]["from"]
                 payload = SIMPLEPAYLOAD
