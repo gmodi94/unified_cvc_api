@@ -205,7 +205,7 @@ async def callback():
                 payload = SIMPLEPAYLOAD
                 payload["phone"] = "+"+number
                 payload["text"] = "Welcome to Contactless Visiting Card Service"
-
+                send_message(payload,"wbm")
 
             else:
                 number = callback_payload["messages"][0]["from"]
