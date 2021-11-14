@@ -177,13 +177,10 @@ async def callback():
                 number = callback_payload["messages"][0]["from"]
                 user = await get_user_details_from_number("+"+number)
                 users = await get_list(str(user.id))
-                for user in users:
-                    user = await get_user_details(user)
-                    final_payload = RICH_TEXT_PAYLOAD 
-                    full_name = user.first_name + user.last_name
-                    final_payload["phone"] = "+"+number
-                    final_payload["media"]["caption"] = "Contact Details Received From {}: \n \n*Name:* {} \n \n*Mobile Number:* {} \n \n*Email:* {}  \n \n*Address:* {}  \n \n*Notes:* {}".format(user.first_name,full_name,user.mobile_number,user.email,user.address,user.extra_notes)
-                    send_message(final_payload,"wbm")
+                csvbase = await get_csv(users)
+                final_payload = MAIL_PAYLOAD
+                final_payload["message"]["attachments"][0]["content"]=csvbase
+                send_message(final_payload,"mail")
             else:
                 number = callback_payload["messages"][0]["from"]
                 payload = SIMPLEPAYLOAD

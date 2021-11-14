@@ -4,6 +4,7 @@ from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw 
 import base64
+import csv
 import json
 def qr(id, first_name, last_name ):
     image = Image.new('RGB',(400,500),(255,255,255))
@@ -48,3 +49,8 @@ def create_blob():
     image_file = open('hi.png','rb').read()
     blob_data = base64.b64encode(image_file)
     return blob_data
+
+def csv_to_base64(csvdata):
+    f = io.BytesIO()
+    csv.writer(f).writerows(csvdata)
+    return base64.b64encode(f.getvalue().encode())

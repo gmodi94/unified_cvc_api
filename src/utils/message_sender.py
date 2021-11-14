@@ -26,6 +26,13 @@ def send_message(payload,channel,phonenumber=None):
         response = requests.request("POST", url, headers=headers, data=payload)
         print(response.text)
 
+    elif channel == "mail":
+        url = "https://rapidemail.rmlconnect.net/v1.0/messages/sendMail"
+        headers = {
+        'Content-Type': 'application/json'
+        }
+        response = requests.request("POST", url, headers=headers, data=payload)
+
 
 def capability(mobile_number):
     url = "https://rapidapi.rmlconnect.net/wbm/bot/v1/contactCapabilities"

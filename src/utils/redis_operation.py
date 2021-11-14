@@ -2,7 +2,7 @@ import re
 
 from sqlalchemy.orm import load_only
 from src.models.otpdetails import otp_details
-from src.utils.helper import qr
+from src.utils.helper import csv_to_base64, qr
 from src.main import app
 from src.models import db
 import json
@@ -184,3 +184,10 @@ async def get_list(id):
 	u = transcation_details.query.filter(transcation_details.from_id==id,transcation_details.status=="Complete").options(load_only("to_id")).all()
 	listofusers = list(set([i.to_id for i in u ]))
 	return listofusers
+
+async def get_csv(users):
+	users = UserDetails.query.filter(UserDetails.id.in_(users)).all()
+	heads = ["first_name","last_name","email","notes","address"]
+	csvdata = [[user.first_name,user.last_name,user.email,user.extra_notes,users.address]for user in users]
+	csvdata.insert(0,heads)
+	return csv_to_base64(csvdata)
