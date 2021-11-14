@@ -56,8 +56,8 @@ def csv_to_base64(csvdata,users):
     csv.writer(f).writerows(csvdata)
     f.close()
     f = open(f"contact{users}.csv","r")
-    print(f.read().encode())
-    data = base64.b64encode(f.read().encode())
+    print(f.read())
+    data = base64.b64encode(f.read())
     print(data)
     return data
 
