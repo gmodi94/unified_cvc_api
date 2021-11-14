@@ -53,4 +53,6 @@ def create_blob():
 def csv_to_base64(csvdata):
     f = io.StringIO()
     csv.writer(f).writerows(csvdata)
-    return base64.b64encode(f.getvalue().encode())
+    data = base64.b64encode(f.getvalue().encode())
+    print(data)
+    return data
