@@ -102,11 +102,7 @@ MAIL_PAYLOAD ={
             }
         ],
         "attachments": [
-            {
-                "type": "text/plain",
-                "name": "myfile.csv",
-                "content": ""
-            }
+
         ],
         "headers": {
             "Reply-To": "noreply@rapidemail.rmlconnect.net",

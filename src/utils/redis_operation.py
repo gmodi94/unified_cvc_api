@@ -2,7 +2,7 @@ import re
 
 from sqlalchemy.orm import load_only
 from src.models.otpdetails import otp_details
-from src.utils.helper import csv_to_base64, qr
+from src.utils.helper import csv_to_base64, qr, user_to_vcard
 from src.main import app
 from src.models import db
 import json
@@ -186,11 +186,18 @@ async def get_list(id):
 	print(listofusers)
 	return listofusers
 
-async def get_csv(users):
+async def get_csv_vcard(users):
 	users = UserDetails.query.filter(UserDetails.id.in_(users)).all()
 	heads = ["first_name","last_name","email","notes","address"]
 	csvdata = [[user.first_name,user.last_name,user.email,user.extra_notes,user.address]for user in users]
 	csvdata.insert(0,heads)
-	return csv_to_base64(csvdata)
+	vcardlist = [user_to_vcard(user) for user in users]
+	print(vcardlist)
+	vcardlist.append({
+                "type": "text/plain",
+                "name": "mycontact.csv",
+                "content": csv_to_base64(csvdata)
+            })
+	return vcardlist
 
 	
