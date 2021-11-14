@@ -240,6 +240,9 @@ async def callback():
 async def registration():
     try:
         data = request.json
+        number = data["mobile_number"]
+        if not capability(number):
+            return {"status":"Invalid Whatsapp number"}
         # data= ValidateData().load(data)
         if not await add_user(data):
             return {"status": "User Exist"}
