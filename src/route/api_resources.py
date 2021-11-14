@@ -189,6 +189,10 @@ async def callback():
                     final_payload["message"]["to"][0]["email"]=user.email
                     print(final_payload)
                     send_message(final_payload,"mail")
+                    payload = SIMPLEPAYLOAD
+                    payload["phone"] = "+"+number
+                    payload["text"] = "we have mailed your list on your email id"+user.email
+                    send_message(payload,"wbm")
                 else:
                     payload = SIMPLEPAYLOAD
                     payload["phone"] = "+"+number
