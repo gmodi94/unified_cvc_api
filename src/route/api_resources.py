@@ -91,7 +91,7 @@ async def scan(from_id):
     sendername = sender.first_name
     payload = MESSAGE_PAYLOAD
     payload["phone"] = number
-    payload["media"]["body"] = payload["media"]["body"].format(name,sendername)
+    payload["media"]["body"] = "HI {}, Do you Want to Exchange visiting card with {}".format(name,sendername)
     payload["media"]["button"][0]["id"] = "yes:"+str(t_id)
     payload["media"]["button"][1]["id"] = "no:"+str(t_id)
     payload["media"]["button"][2]["id"] = "Spam:"+str(t_id)
