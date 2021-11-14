@@ -278,7 +278,7 @@ async def send_bulk(from_id):
                     payload["card"]["url"] = url
                     send_message(payload,"rcs")
                 elif channel == "mail":
-                    final_payload = MAIL_PAYLOAD
+                    final_payload = BULK_MAIL_PAYLOAD
                     final_payload["message"]["html"] = "<img src="+url+" width='500' height='500'>" 
                     final_payload["message"]["to"][0]["email"]=user.email
                     final_payload["message"]["to"][0]["name"]=user.first_name+" "+user.last_name
@@ -298,7 +298,7 @@ async def send_bulk(from_id):
                     payload["card"]["title"] = "Message From "+from_user.first_name
                     payload["card"]["url"] = url
                     send_message(payload,"rcs")
-                    final_payload = MAIL_PAYLOAD
+                    final_payload = BULK_MAIL_PAYLOAD
                     final_payload["message"]["html"] = "<img src="+url+" width='500' height='500'>"  
                     final_payload["message"]["text"] = "Message From "+from_user.first_name
                     final_payload["message"]["to"][0]["name"]=user.first_name+" "+user.last_name
