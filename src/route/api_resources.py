@@ -26,7 +26,7 @@ async def send_otp():
         otp = random.randint(1000,9999)
         if not capability(d['mobile_number']):
             return {"status":"Invalid Whatsapp number"}
-        message = f"Your OTP is {otp} \nThis OTP will Expire in next 15 min"
+        message = f"Your OTP is {otp} \nThis OTP will Expire in next 15 min."
         expiry_time = (datetime.now() + timedelta(minutes=2)).strftime("%Y-%m-%d %H:%M:%S")
         data = {
         "otp":otp,
@@ -51,7 +51,7 @@ async def validate():
         if expiry_time > datetime.now():
             if str(data["otp"]) == d["otp"]:
                 if d["action"]=="sign_up":
-                    return {"status":"success",}
+                    return {"status":"success"}
                 elif d['action'] == "log_in":
                     token, blob = await get_token(mobile_number)
                     print(blob)
@@ -75,25 +75,25 @@ async def scan(from_id):
     to_id = payload["id"]
     user = await get_user_details(to_id)
     if user is None:
-        return {"status":"user does not exist"}
+        return {"status":"User does not exist"}
     if to_id == from_id:
         return {"status":"Same User"}
     if await check_ban(from_id,to_id):
-        return {"status":"You are been ban"}
+        return {"status":"You have been banned"}
 
     t_id = await add_transcations(to_id,from_id)
     sender = await get_user_details(from_id)
     user = await get_user_details(to_id)
     if user is None:
-        return {"status":"user does not exist"}
+        return {"status":"User does not exist"}
     number = user.mobile_number
     name = user.first_name
     sendername = sender.first_name
     payload = MESSAGE_PAYLOAD
     payload["phone"] = number
-    payload["media"]["body"] = "HI {}, Do you Want to Exchange visiting card with {}".format(name,sendername)
-    payload["media"]["button"][0]["id"] = "yes:"+str(t_id)
-    payload["media"]["button"][1]["id"] = "no:"+str(t_id)
+    payload["media"]["body"] = "Hi {}, Do you Want to Exchange visiting card with {}.".format(name,sendername)
+    payload["media"]["button"][0]["id"] = "Yes:"+str(t_id)
+    payload["media"]["button"][1]["id"] = "No:"+str(t_id)
     payload["media"]["button"][2]["id"] = "Spam:"+str(t_id)
     print(payload)
     send_message(payload,"wbm")
@@ -123,13 +123,13 @@ async def callback():
                 final_payload = RICH_TEXT_PAYLOAD 
                 full_name = user_details2.first_name +" "+ user_details2.last_name
                 final_payload["phone"] = user_details1.mobile_number
-                final_payload["media"]["caption"] = "Contact Details Received From {}: \n \n*Name:* {} \n \n*Mobile Number:* {} \n \n*Email:* {}  \n \n*Address:* {}  \n \n*Notes:* {}".format(user_details2.first_name,full_name,user_details2.mobile_number,user_details2.email,user_details2.address,user_details2.extra_notes)
+                final_payload["media"]["caption"] = "Contact Details Received From {}: \n \n*Name:* {} \n \n*Mobile Number:* {} \n \n*Email:* {}  \n \n*Address:* {}  \n \n*Notes:* {}.".format(user_details2.first_name,full_name,user_details2.mobile_number,user_details2.email,user_details2.address,user_details2.extra_notes)
                 print(final_payload)
                 send_message(final_payload,"wbm")
                 # final_payload = RICH_TEXT_PAYLOAD 
                 full_name = user_details1.first_name + user_details1.last_name
                 final_payload["phone"] = user_details2.mobile_number
-                final_payload["media"]["caption"] = "Contact Details Received From {}: \n \n*Name:* {} \n \n*Mobile Number:* {} \n \n*Email:* {}  \n \n*Address:* {}  \n \n*Notes:* {}".format(user_details1.first_name,full_name,user_details1.mobile_number,user_details1.email,user_details1.address,user_details1.extra_notes)
+                final_payload["media"]["caption"] = "Contact Details Received From {}: \n \n*Name:* {} \n \n*Mobile Number:* {} \n \n*Email:* {}  \n \n*Address:* {}  \n \n*Notes:* {}.".format(user_details1.first_name,full_name,user_details1.mobile_number,user_details1.email,user_details1.address,user_details1.extra_notes)
                 print(final_payload)
                 send_message(final_payload,"wbm")
 
@@ -164,10 +164,10 @@ async def callback():
             elif answer == "No":
                 final_payload = FALLBACK_PAYLOAD
                 final_payload["phone"] = user_details1.mobile_number
-                final_payload["text"] = "Your request has deined by {}".format(user_details2.first_name)
+                final_payload["text"] = "Your request has been denied by {}.".format(user_details2.first_name)
                 send_message(final_payload,"wbm")
                 final_payload["phone"] = user_details2.mobile_number
-                final_payload["text"] = "Rejection Successfull"
+                final_payload["text"] = "Rejection Successfull!"
                 send_message(final_payload,"wbm")
                 await up_transaction(transaction_id,"Failed")
 
@@ -193,18 +193,18 @@ async def callback():
                     send_message(final_payload,"mail")
                     payload = SIMPLEPAYLOAD
                     payload["phone"] = "+"+number
-                    payload["text"] = "we have mailed your list on your email id "+user.email
+                    payload["text"] = "We have mailed connection list on your email id "+user.email+"."
                     send_message(payload,"wbm")
                 else:
                     payload = SIMPLEPAYLOAD
                     payload["phone"] = "+"+number
-                    payload["text"] = "You have no connection till Now"
+                    payload["text"] = "You have no connections till now."
                     send_message(payload,"wbm")
             elif callback_payload["messages"][0]["text"]["body"].lower() in ["hi","hello","hey"]:
                 number = callback_payload["messages"][0]["from"]
                 payload = SIMPLEPAYLOAD
                 payload["phone"] = "+"+number
-                payload["text"] = "Welcome to Contactless Visiting Card Service"
+                payload["text"] = "Welcome to Contactless Visiting Card Service."
                 send_message(payload,"wbm")
 
             else:
@@ -244,7 +244,7 @@ async def registration():
         if not await add_user(data):
             return {"status": "User Exist"}
         await add_user(data)
-        payload = "Registration is successful \n Please click on this link and send the \"Hi\" message \n https://wa.me/+918928894215?text=Hi"
+        payload = "Registration is successful \n Please click on this link and send \"Hi\" message \n https://wa.me/+918928894215?text=Hi"
         send_message(payload,"sms",data["mobile_number"])
         return {"status":"success"}
     except Exception as e:
