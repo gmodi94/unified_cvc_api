@@ -116,3 +116,27 @@ MAIL_PAYLOAD ={
     "owner_id": "32360039",
     "token": "8EuquwYgAt7oT9DzW5etrm6W"
 }
+
+BULK_MAIL_PAYLOAD ={
+    "smtp_user_name": "smtp50438253",
+    "message": {
+        "html": "",
+        "text": "Example text content",
+        "subject": "example subject",
+        "from_email": "noreply@rapidemail.rmlconnect.net",
+        "from_name": "Example Name",
+        "to": [
+            {
+                "email": "waghela.rutvej1@gmail.com",
+                "name": "Recipient Name",
+                "type": "to"
+            }
+        ],
+        "headers": {
+            "Reply-To": "noreply@rapidemail.rmlconnect.net",
+            "X-Unique-Id": "id"
+        }
+    },
+    "owner_id": "32360039",
+    "token": "8EuquwYgAt7oT9DzW5etrm6W"
+}
