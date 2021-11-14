@@ -42,6 +42,7 @@ def qr(id, first_name, last_name ):
     image.save(stream ,format="png")
     blobdata = stream.getvalue()
     blobdata = base64.b64encode(blobdata)
+    stream.close()
     # print(base64.b64encode(blobdata))
     return blobdata.decode()
     
@@ -50,13 +51,14 @@ def create_blob():
     blob_data = base64.b64encode(image_file)
     return blob_data
 
-def csv_to_base64(csvdata):
+def csv_to_base64(csvdata,name):
     f = io.StringIO()
     csv.writer(f).writerows(csvdata)
     data = base64.b64encode(f.getvalue().encode())
+    f.close()
     print(data)
     return data
 
 def user_to_vcard(user):
-    vcardformat = "BEGIN:VCARD\nVERSION:2.1\nN:{};;;;\nFN:{}\nTEL;HOME:{}\nEMAIL:{}\nADR;HOME:;;{}\nEND:VCARD\n".format(user.first_name,user.first_name+" "+user.last_name,user.mobile_number,user.email,user.address)
+    vcardformat = "BEGIN:VCARD\nVERSION:3.0\nN:{};;;;\nFN:{}\nTEL;HOME:{}\nEMAIL:{}\nADR;HOME:;;{}\nEND:VCARD\n".format(user.first_name,user.first_name+" "+user.last_name,user.mobile_number,user.email,user.address)
     return vcardformat

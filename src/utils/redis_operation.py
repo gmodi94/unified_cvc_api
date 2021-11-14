@@ -198,6 +198,7 @@ async def get_csv_vcard(users):
 		f.write(user_to_vcard(user))
 	filecontent = f.getvalue().encode()
 	data = base64.b64encode(filecontent).decode()
+	f.close()
 	datadict = {}
 	datadict["type"] = "text/plain"
 	datadict["name"] = f"mycontacts.vcf"
