@@ -281,7 +281,7 @@ async def send_bulk(from_id):
                     final_payload["message"]["html"] = "<img src="+url+" width='500' height='500'>" 
                     final_payload["message"]["to"][0]["email"]=user.email
                     final_payload["message"]["text"] = "Message From "+from_user.first_name
-                    final_payload["message"]["from_name"] = "Message From "+from_user.first_name
+                    final_payload["message"]["from_name"] = from_user.first_name+" "+from_user.last_name
                     print(final_payload)
                     send_message(final_payload,"mail")
                 else:
@@ -298,7 +298,7 @@ async def send_bulk(from_id):
                     final_payload = MAIL_PAYLOAD
                     final_payload["message"]["html"] = "<img src="+url+" width='500' height='500'>"  
                     final_payload["message"]["text"] = "Message From "+from_user.first_name
-                    final_payload["message"]["from_name"] = "Message From "+from_user.first_name
+                    final_payload["message"]["from_name"] = from_user.first_name+" "+from_user.last_name
                     final_payload["message"]["to"][0]["email"]=user.email
                     print(final_payload)
                     send_message(final_payload,"mail")
