@@ -51,7 +51,7 @@ def create_blob():
     blob_data = base64.b64encode(image_file)
     return blob_data
 
-def csv_to_base64(csvdata,name):
+def csv_to_base64(csvdata):
     f = io.StringIO()
     csv.writer(f).writerows(csvdata)
     data = base64.b64encode(f.getvalue().encode())
