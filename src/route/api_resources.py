@@ -275,7 +275,7 @@ async def send_bulk(from_id):
                     send_message(payload,"rcs")
                 elif channel == "mail":
                     final_payload = MAIL_PAYLOAD
-                    final_payload["message"]["html"] = "<img src="+url+">"  
+                    final_payload["message"]["html"] = "<img src="+url+" width='500' height='500'>" 
                     final_payload["message"]["to"][0]["email"]=user.email
                     print(final_payload)
                     send_message(final_payload,"mail")
