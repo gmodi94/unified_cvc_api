@@ -11,6 +11,8 @@ import redis
 from src.models.Transcationmodel import transcation_details
 from src.models.userdetails import UserDetails
 import jwt
+import io
+import base64
 try:
 	redis_con = redis.Redis(host="localhost",
 							port=6379,
@@ -80,13 +82,13 @@ async def add_user(data):
 	if u:
 		return False
 	insert_data = {
-            "first_name" : data["first_name"],
-            "last_name" : data["last_name"],
-            "mobile_number": data["mobile_number"],
-            "extra_notes": data["extra_notes"],
-            "address": data["address"],
+			"first_name" : data["first_name"],
+			"last_name" : data["last_name"],
+			"mobile_number": data["mobile_number"],
+			"extra_notes": data["extra_notes"],
+			"address": data["address"],
 			"email":data["email"]
-        }
+		}
 	user_id = UserDetails(**insert_data)
 	print(user_id.last_name)
 	db.session.add(user_id)
@@ -191,13 +193,22 @@ async def get_csv_vcard(users):
 	heads = ["first_name","last_name","email","notes","address"]
 	csvdata = [[user.first_name,user.last_name,user.email,user.extra_notes,user.address]for user in users]
 	csvdata.insert(0,heads)
-	vcardlist = [user_to_vcard(user) for user in users]
+	f = io.StringIO()
+	for user in users:
+		f.write(user_to_vcard(user))
+	filecontent = f.getvalue().encode()
+	data = base64.b64encode(filecontent).decode()
+	datadict = {}
+	datadict["type"] = "text/plain"
+	datadict["name"] = f"mycontacts.vcf"
+	datadict["content"] = data
+	vcardlist=[datadict]
 	print(vcardlist)
 	vcardlist.append({
-                "type": "text/plain",
-                "name": "mycontact.csv",
-                "content": csv_to_base64(csvdata).decode()
-            })
+				"type": "text/plain",
+				"name": "mycontact.csv",
+				"content": csv_to_base64(csvdata).decode()
+			})
 	return vcardlist
 
 	
