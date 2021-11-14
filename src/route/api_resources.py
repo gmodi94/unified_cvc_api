@@ -57,12 +57,12 @@ async def validate():
                     print(blob)
                     return {"status":"success","token":token,"qrimage":str(blob)}
             else:
-                return {"status":"invalid"}
+                return {"status":"invalid"},400
         else:
-            return {"status":"expired"}
+            return {"status":"expired"},400
     except:
         traceback.print_exc()
-        return {"status":"expired"}
+        return {"status":"expired"},400
 
 
 @app.route("/v1/scan",methods=["post"])
