@@ -51,10 +51,10 @@ def create_blob():
     blob_data = base64.b64encode(image_file)
     return blob_data
 
-def csv_to_base64(csvdata):
-    f = io.StringIO()
+def csv_to_base64(csvdata,users):
+    f = open(f"contact{users}.csv","w")
     csv.writer(f).writerows(csvdata)
-    data = base64.b64encode(f.getvalue().encode())
+    data = base64.b64encode(f.read().encode())
     f.close()
     print(data)
     return data
