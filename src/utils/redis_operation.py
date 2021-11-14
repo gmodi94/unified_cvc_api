@@ -187,6 +187,7 @@ async def get_list(id):
 
 async def get_csv(users):
 	users = UserDetails.query.filter(UserDetails.id.in_(users)).all()
+	print(users)
 	if users != None:
 		heads = ["first_name","last_name","email","notes","address"]
 		csvdata = [[user.first_name,user.last_name,user.email,user.extra_notes,user.address]for user in users]
