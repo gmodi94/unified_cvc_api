@@ -258,6 +258,8 @@ async def send_bulk(from_id):
             print(extension)
             return {"error":"only img file"}
         users = await get_list(from_id)
+        if users == []:
+            return {"status":"You have no connection till now"}
         for user in users:
             user = await get_user_details(user)
             if not await check_ban(from_id,str(user.id)):
