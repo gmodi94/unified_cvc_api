@@ -182,8 +182,8 @@ async def callback():
                     connection = False
                 else :
                     connection = True
-                csvbase = await get_csv(users)
                 if connection == True:
+                    csvbase = await get_csv(users)
                     final_payload = MAIL_PAYLOAD
                     final_payload["message"]["attachments"][0]["content"]=csvbase.decode()
                     final_payload["message"]["to"][0]["email"]=user.email
@@ -191,7 +191,7 @@ async def callback():
                     send_message(final_payload,"mail")
                     payload = SIMPLEPAYLOAD
                     payload["phone"] = "+"+number
-                    payload["text"] = "we have mailed your list on your email id"+user.email
+                    payload["text"] = "we have mailed your list on your email id "+user.email
                     send_message(payload,"wbm")
                 else:
                     payload = SIMPLEPAYLOAD
