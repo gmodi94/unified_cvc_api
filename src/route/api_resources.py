@@ -1,3 +1,4 @@
+from redis import connection
 from src.main import app
 from flask import request,jsonify,redirect
 from src.utils.redis_operation import *
@@ -177,12 +178,18 @@ async def callback():
                 number = callback_payload["messages"][0]["from"]
                 user = await get_user_details_from_number("+"+number)
                 users = await get_list(str(user.id))
-                csvbase = await get_csv(users)
-                final_payload = MAIL_PAYLOAD
-                final_payload["message"]["attachments"][0]["content"]=csvbase.decode()
-                final_payload["message"]["to"][0]["email"]=user.email
-                print(final_payload)
-                send_message(final_payload,"mail")
+                csvbase,connection = await get_csv(users)
+                if connection == True:
+                    final_payload = MAIL_PAYLOAD
+                    final_payload["message"]["attachments"][0]["content"]=csvbase.decode()
+                    final_payload["message"]["to"][0]["email"]=user.email
+                    print(final_payload)
+                    send_message(final_payload,"mail")
+                else:
+                    payload = SIMPLEPAYLOAD
+                    payload["phone"] = "+"+number
+                    payload["text"] = "You have no connection till Now"
+                    send_message(payload,"wbm")
             else:
                 number = callback_payload["messages"][0]["from"]
                 payload = SIMPLEPAYLOAD
