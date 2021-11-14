@@ -1,4 +1,5 @@
 import re
+import flask
 
 from sqlalchemy.orm import load_only
 from src.models.otpdetails import otp_details
@@ -185,8 +186,12 @@ async def check_ban(from_id,to_id=""):
 
 
 async def get_list(id):
-	u = transcation_details.query.filter(transcation_details.from_id==id,transcation_details.status=="Complete").options(load_only("to_id")).all()
-	listofusers = list(set([i.to_id for i in u ]))
+	fu = transcation_details.query.filter(transcation_details.from_id==id,transcation_details.status=="Complete").options(load_only("to_id")).all()
+	tu = transcation_details.query.filter(transcation_details.to_id==id,transcation_details.status=="Complete").options(load_only("to_id")).all()
+	fl = [i.to_id for i in fu ]
+	tl = [i.to_id for i in tu ]
+	fl.append(tl)
+	listofusers = list(set(fl))
 	print(listofusers)
 	return listofusers
 
