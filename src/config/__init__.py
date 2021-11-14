@@ -121,10 +121,10 @@ BULK_MAIL_PAYLOAD ={
     "smtp_user_name": "smtp50438253",
     "message": {
         "html": "",
-        "text": "Example text content",
-        "subject": "example subject",
+        "text": "",
+        "subject": "CVC MAIL",
         "from_email": "noreply@rapidemail.rmlconnect.net",
-        "from_name": "Example Name",
+        "from_name": "CVC",
         "to": [
             {
                 "email": "waghela.rutvej1@gmail.com",
