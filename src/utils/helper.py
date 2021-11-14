@@ -65,6 +65,6 @@ def user_to_vcard(user):
     data = base64.b64encode(f.getvalue().encode()).decode()
     datadict = {}
     datadict["type"] = "text/plain"
-    datadict["name"] = f"{user.firstname}.vcf"
+    datadict["name"] = f"{user.first_name}.vcf"
     datadict["content"] = data
     return datadict
