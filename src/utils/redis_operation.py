@@ -189,7 +189,7 @@ async def get_list(id):
 	fu = transcation_details.query.filter(transcation_details.from_id==id,transcation_details.status=="Complete").options(load_only("to_id")).all()
 	tu = transcation_details.query.filter(transcation_details.to_id==id,transcation_details.status=="Complete").options(load_only("to_id")).all()
 	fl = [i.to_id for i in fu ]
-	tl = [i.to_id for i in tu ]
+	tl = [i.from_id for i in tu ]
 	fl.extend(tl)
 	listofusers = list(set(fl))
 	print(listofusers)
