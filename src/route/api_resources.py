@@ -36,7 +36,7 @@ async def send_otp():
         return {"status":"success"}
     except :
         traceback.print_exc()
-        return {"status":"failure"}
+        return {"status":"failure"},400
 
 @app.route('/v1/validate_otp', methods = ['POST'])
 async def validate():
