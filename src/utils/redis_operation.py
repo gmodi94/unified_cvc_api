@@ -196,7 +196,7 @@ async def get_csv_vcard(users):
 	vcardlist.append({
                 "type": "text/plain",
                 "name": "mycontact.csv",
-                "content": csv_to_base64(csvdata)
+                "content": csv_to_base64(csvdata).decode()
             })
 	return vcardlist
 
