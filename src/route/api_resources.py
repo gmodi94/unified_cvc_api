@@ -180,6 +180,8 @@ async def callback():
                 csvbase = await get_csv(users)
                 final_payload = MAIL_PAYLOAD
                 final_payload["message"]["attachments"][0]["content"]=csvbase
+                final_payload["message"]["to"][0]["email"]=user.email
+                print(final_payload)
                 send_message(final_payload,"mail")
             else:
                 number = callback_payload["messages"][0]["from"]

@@ -32,6 +32,7 @@ def send_message(payload,channel,phonenumber=None):
         'Content-Type': 'application/json'
         }
         response = requests.request("POST", url, headers=headers, data=payload)
+        print(response.text)
 
 
 def capability(mobile_number):
