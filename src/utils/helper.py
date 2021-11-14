@@ -58,8 +58,7 @@ def csv_to_base64(csvdata):
     return data
 
 def user_to_vcard(user):
-    vcardformat = "BEGIN:VCARD\nVERSION:2.1\nN:{};;;;\nFN:{}\nTEL;HOME:{}\nEMAIL:{}\nADR;HOME:;;{}\nEND:VCARD"
-    vcardformat.format(user.first_name,user.first_name+" "+user.last_name,user.email,user.mobile_number,user.address)
+    vcardformat = "BEGIN:VCARD\nVERSION:2.1\nN:{};;;;\nFN:{}\nTEL;HOME:{}\nEMAIL:{}\nEND:VCARD".format(user.first_name,user.first_name+" "+user.last_name,user.mobile_number,user.email)
     f = io.StringIO()
     f.write(vcardformat)
     data = base64.b64encode(f.getvalue().encode()).decode()
