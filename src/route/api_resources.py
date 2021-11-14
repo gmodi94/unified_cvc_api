@@ -183,7 +183,7 @@ async def callback():
                 else :
                     connection = True
                 if connection == True:
-                    csvbase,vcardlist = await get_csv_vcard(users)
+                    vcardlist = await get_csv_vcard(users)
                     final_payload = MAIL_PAYLOAD
                     # final_payload["message"]["attachments"][0]["content"]=csvbase.decode()
                     final_payload["message"]["attachments"].extend(vcardlist)
