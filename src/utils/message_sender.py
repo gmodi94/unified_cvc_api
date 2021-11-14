@@ -25,12 +25,13 @@ def send_message(payload,channel,phonenumber=None):
         }
         response = requests.request("POST", url, headers=headers, data=payload)
         print(response.text)
-
     elif channel == "mail":
+        print(channel)
         url = "https://rapidemail.rmlconnect.net/v1.0/messages/sendMail"
         headers = {
         'Content-Type': 'application/json'
         }
+        payload = json.dumps(payload)
         response = requests.request("POST", url, headers=headers, data=payload)
         print(response.text)
 
