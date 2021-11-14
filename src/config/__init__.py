@@ -122,7 +122,7 @@ BULK_MAIL_PAYLOAD ={
     "message": {
         "html": "",
         "text": "",
-        "subject": "CVC MAIL",
+        "subject": "Promotion",
         "from_email": "noreply@rapidemail.rmlconnect.net",
         "from_name": "CVC",
         "to": [
