@@ -183,18 +183,14 @@ async def check_ban(from_id,to_id=""):
 async def get_list(id):
 	u = transcation_details.query.filter(transcation_details.from_id==id,transcation_details.status=="Complete").options(load_only("to_id")).all()
 	listofusers = list(set([i.to_id for i in u ]))
+	print(listofusers)
 	return listofusers
 
 async def get_csv(users):
 	users = UserDetails.query.filter(UserDetails.id.in_(users)).all()
-	print(users)
-	if users != None:
-		heads = ["first_name","last_name","email","notes","address"]
-		csvdata = [[user.first_name,user.last_name,user.email,user.extra_notes,user.address]for user in users]
-		csvdata.insert(0,heads)
-		return csv_to_base64(csvdata),True
-	else:
-		# csvdata = [["first_name","last_name","email","notes","address"]]
-		return None,False
+	heads = ["first_name","last_name","email","notes","address"]
+	csvdata = [[user.first_name,user.last_name,user.email,user.extra_notes,user.address]for user in users]
+	csvdata.insert(0,heads)
+	return csv_to_base64(csvdata)
 
 	

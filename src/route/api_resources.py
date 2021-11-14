@@ -178,7 +178,11 @@ async def callback():
                 number = callback_payload["messages"][0]["from"]
                 user = await get_user_details_from_number("+"+number)
                 users = await get_list(str(user.id))
-                csvbase,connection = await get_csv(users)
+                if users == []:
+                    connection = False
+                else :
+                    connection = True
+                csvbase = await get_csv(users)
                 if connection == True:
                     final_payload = MAIL_PAYLOAD
                     final_payload["message"]["attachments"][0]["content"]=csvbase.decode()
