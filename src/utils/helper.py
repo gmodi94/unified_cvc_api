@@ -58,7 +58,6 @@ def csv_to_base64(csvdata,users):
     f = open(f"contact{users}.csv","r")
     print(f.read().encode())
     data = base64.b64encode(f.read().encode())
-    print(data)
     return data
 
 def user_to_vcard(user):
